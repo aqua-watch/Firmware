@@ -4,6 +4,7 @@
 #include <EEPROM.h>
 #include "GravityTDS.h"
 #include <OneWire.h>
+#include <ArduinoHttpClient.h>
 
 
 #define VOLTAGE 5.00    //system voltage
@@ -19,12 +20,12 @@ int orpArray[ArrayLenth];
 int orpArrayIndex=0;
 
 /*TDS Variables*/
-#define TdsSensorPin A0
+#define TdsSensorPin 0
 GravityTDS gravityTds;
 float temperature = 25,tdsValue = 0;
 
 /*PH varialbes*/
-#define SensorPin A2            //pH meter Analog output to Arduino Analog Input 0
+#define SensorPin 2            //pH meter Analog output to Arduino Analog Input 0
 #define Offset 0.00            //deviation compensate
 #define LED 13
 #define samplingInterval 20
@@ -38,12 +39,12 @@ int pHArrayIndex=0;
 #define ReadTemperature 1
 
 const byte numReadings = 20;     //the number of sample times
-byte ECsensorPin = A4;  //EC Meter analog output,pin on analog 1
-byte DS18B20_Pin = 2; //DS18B20 signal, pin on digital 2
+byte ECsensorPin = 3;  //EC Meter analog output,pin on analog 1
+byte DS18B20_Pin = 4; //DS18B20 signal, pin on digital 2
 unsigned int AnalogSampleInterval=25,printInterval=700,tempSampleInterval=850;  //analog sample interval;serial print interval;temperature sample interval
 unsigned int readings[numReadings];      // the readings from the analog input
 byte index = 0;                  // the index of the current reading
-unsigned long AnalogValueTotal = 0;                  // the running total
+unsigned long ECReading = 0;                  // the running total
 unsigned int AnalogAverage = 0,averageVoltage=0;                // the average
 unsigned long AnalogSampleTime,printTime,tempSampleTime;
 float ECcurrent; 
@@ -51,21 +52,14 @@ float ECcurrent;
 //Temperature chip i/o
 OneWire ds(DS18B20_Pin);  // on digital pin 2
 
+//Turp variables
+#define turpPin 5
+
+
+
 
 void setup() {
-  // SET UP THE JSON OBJECT
-  StaticJsonBuffer<200> jsonBuffer;
-
-  char json[] =
-      "{\"ORP\":\"\",\"PH\":\"\",\"TDS\":\"\",\"Turpidity\":\"\",:\"Conductivity\"::\"\"}";
-
-  JsonObject& root = jsonBuffer.parseObject(json);
-
-  // Test if parsing succeeds.
-  if (!root.success()) {
-    Serial.println("parseObject() failed");
-    return;
-  }
+  
   Serial.begin(9600);
 
   //ORP SET UP 
@@ -96,6 +90,51 @@ void setup() {
   
   //add everything in to json object
 
+  float turp = getTurpidity();
+  float cond = getConductivity();
+  float PH = getPH();
+  float ORP = getORP();
+  double TDS = getTDS();
+
+  Serial.print("Conductivity:");
+  Serial.println(cond);
+  Serial.print("PH:");
+  Serial.println(PH);
+  Serial.print("ORP:");
+  Serial.println(ORP);
+  Serial.print("TDS:");
+  Serial.println(TDS);
+  Serial.print("Turp:");
+  Serial.println(turp);
+  
+  // SET UP THE JSON OBJECT
+
+  
+  StaticJsonBuffer<200> jsonBuffer;
+  //char json[] =
+  //    "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
+  //char *json = new char[];
+  char json[] = "{\"ORP\":\"\",\"PH\":\"\",\"TDS\":\"\",\"Turbidity\":\"\",:\"Conductivity\"::\"\"}";
+
+  JsonObject& root = jsonBuffer.parseObject(json);
+
+  // Test if parsing succeeds.
+  if (!root.success()) {
+    Serial.println("parseObject() failed");
+    return;
+  }else{
+    Serial.println("Parse object worked");
+    }
+      
+   root["ORP"] = ORP;
+   root["PH"] = PH;
+   root["TDS"] = TDS;
+   root["Turbidity"] = turp;
+   root["conductivity"] = cond;
+
+   
+   
+
   
 }
 
@@ -106,9 +145,9 @@ void loop() {
 
 /*Turpidity function*/
 float getTurpidity(){
-      int sensorValue = analogRead(A0);// read the input on analog pin 0:
+      int sensorValue = analogRead(turpPin);// read the input on analog pin 0:
       float voltage = sensorValue * (5.0 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
-      Serial.println(voltage); // print out the value you read:
+      //Serial.println(voltage); // print out the value you read:
 
       return voltage;
   }
@@ -120,15 +159,16 @@ float getConductivity(){
   /*
    Every once in a while,sample the analog value and calculate the average.
   */
-  if(millis()-AnalogSampleTime>=AnalogSampleInterval)  
-  {
+  
     AnalogSampleTime=millis();
      // subtract the last reading:
-    AnalogValueTotal = AnalogValueTotal - readings[index];
+    //ECReading = ECReading - readings[index];
     // read from the sensor:
-    readings[index] = analogRead(ECsensorPin);
+    int ECReading = analogRead(ECsensorPin);
+    //readings[index] = analogRead(ECsensorPin);
+    
     // add the reading to the total:
-    AnalogValueTotal = AnalogValueTotal + readings[index];
+    //ECReading = ECReading + readings[index];
     // advance to the next position in the array:
     index = index + 1;
     // if we're at the end of the array...
@@ -136,27 +176,25 @@ float getConductivity(){
     // ...wrap around to the beginning:
     index = 0;
     // calculate the average:
-    AnalogAverage = AnalogValueTotal / numReadings;
-  }
+    //AnalogAverage = ECReading / numReadings;
+  
   /*
    Every once in a while,MCU read the temperature from the DS18B20 and then let the DS18B20 start the convert.
    Attention:The interval between start the convert and read the temperature should be greater than 750 millisecond,or the temperature is not accurate!
   */
-   if(millis()-tempSampleTime>=tempSampleInterval) 
-  {
+   
     tempSampleTime=millis();
     temperature = TempProcess(ReadTemperature);  // read the current temperature from the  DS18B20
     TempProcess(StartConvert);                   //after the reading,start the convert for next reading
-  }
+  
    /*
    Every once in a while,print the information on the serial monitor.
   */
-  if(millis()-printTime>=printInterval)
-  {
+  
     printTime=millis();
-    averageVoltage=AnalogAverage*(float)5000/1024;
+    averageVoltage=ECReading*(float)5000/1024;
     Serial.print("Analog value:");
-    Serial.print(AnalogAverage);   //analog average,from 0 to 1023
+    Serial.print(ECReading);   //analog average,from 0 to 1023
     Serial.print("    Voltage:");
     Serial.print(averageVoltage);  //millivolt average,from 0mv to 4995mV
     Serial.print("mV    ");
@@ -180,8 +218,8 @@ float getConductivity(){
 
     return averageVoltage;
   }
-  return 0.0;
-}
+  
+
 
 float TempProcess(bool ch)
 {
@@ -225,32 +263,34 @@ float TempProcess(bool ch)
 
 
 
-/* TDS functions*/
+/* PH functions*/
 double getPH(){
     static unsigned long samplingTime = millis();
     static unsigned long printTime = millis();
     static float pHValue,voltage;
-    if(millis()-samplingTime > samplingInterval)
-    {
         pHArray[pHArrayIndex++]=analogRead(SensorPin);
-        if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
-        voltage = avergearray(pHArray, ArrayLenth)*5.0/1024;
+        int PHsensorVal = analogRead(SensorPin);
+        //if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
+        
+        //voltage = avergearray(pHArray, ArrayLenth)*5.0/1024;
+        voltage = PHsensorVal*5.0/1024;
+        
         pHValue = 3.5*voltage+Offset;
         samplingTime=millis();
-    }
-    if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
-    {
-    //Serial.print("Voltage:");
-          //Serial.print(voltage,2);
+    //}
+    //if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
+    //{
+    Serial.print("Voltage:");
+          Serial.print(voltage,2);
           Serial.print("    pH value: ");
           Serial.println(pHValue,2);
           digitalWrite(LED,digitalRead(LED)^1);
-          //Serial.print(LED);        
+          Serial.print(LED);        
           printTime=millis();
 
           return pHValue;
-    }
-  return 0.0;
+    //}
+  //return 0.0;
 }
 
 /* TDS functions*/
@@ -272,26 +312,18 @@ double getTDS(){
 /*ORP FUNCTION*/
 
 int getORP(){
+  
   static unsigned long orpTimer=millis();   //analog sampling interval
   static unsigned long printTime=millis();
-  if(millis() >= orpTimer)
-  {
+  
     orpTimer=millis()+20;
-    orpArray[orpArrayIndex++]=analogRead(orpPin);    //read an analog value every 20ms
+    int ORPData =analogRead(orpPin);   
     if (orpArrayIndex==ArrayLenth) {
       orpArrayIndex=0;
     }   
-    int orpValue=((30*(double)VOLTAGE*1000)-(75*avergearray(orpArray, ArrayLenth)*VOLTAGE*1000/1024))/75-OFFSET;  
+    int orpValue=((30*(double)5.0*1000)-(75*ORPData*5.0*1000/1024))/75-OFFSET;  
     return((int)orpValue);
-    //convert the analog value to orp according the circuit
-  }
-  if(millis() >= printTime)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
-  {
-  printTime=millis()+800;
     
-  }
-
-  return 0;
 }
 
 
