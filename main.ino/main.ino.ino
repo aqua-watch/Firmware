@@ -5,7 +5,7 @@
 #include "GravityTDS.h"
 #include <OneWire.h>
 #include <ArduinoHttpClient.h>
-
+#include <WiFi101.h>
 
 #define VOLTAGE 5.00    //system voltage
 #define OFFSET 0        //zero drift voltage
@@ -130,8 +130,57 @@ void setup() {
    root["PH"] = PH;
    root["TDS"] = TDS;
    root["Turbidity"] = turp;
-   root["conductivity"] = cond;
+   root["Conductivity"] = cond;
 
+
+  char ssid[] = "";
+  char pass[] = "";
+  
+  
+  char serverAddress[] = "127.0.0.1";  // server address
+  int port = 5000;
+  
+  WiFiClient wifi;
+  HttpClient client = HttpClient(wifi, serverAddress, port);
+  int status = WL_IDLE_STATUS;
+  String response;
+  int statusCode = 0;
+  
+  
+    while ( status != WL_CONNECTED) {
+      Serial.print("Attempting to connect to Network named: ");
+      Serial.println(ssid);                   // print the network name (SSID);
+  
+      // Connect to WPA/WPA2 network:
+      status = WiFi.begin(ssid, pass);
+    }
+  
+    // print the SSID of the network you're attached to:
+    Serial.print("SSID: ");
+    Serial.println(WiFi.SSID());
+  
+    // print your WiFi shield's IP address:
+    IPAddress ip = WiFi.localIP();
+    Serial.print("IP Address: ");
+    Serial.println(ip);
+
+
+    Serial.println("making POST request");
+    String contentType = "application/x-www-form-urlencoded";
+    String postData = "name=Alice&age=12";
+  
+    client.post("/", contentType, postData);
+  
+    // read the status code and body of the response
+    statusCode = client.responseStatusCode();
+    response = client.responseBody();
+  
+    Serial.print("Status code: ");
+    Serial.println(statusCode);
+    Serial.print("Response: ");
+    Serial.println(response);
+  
+    
    
    
 
