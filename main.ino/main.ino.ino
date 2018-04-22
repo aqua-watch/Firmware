@@ -55,9 +55,6 @@ OneWire ds(DS18B20_Pin);  // on digital pin 2
 //Turp variables
 #define turpPin 5
 
-
-
-
 void setup() {
   
   Serial.begin(9600);
@@ -109,7 +106,7 @@ void setup() {
   
   // SET UP THE JSON OBJECT
 
-  
+  /*
   StaticJsonBuffer<200> jsonBuffer;
   //char json[] =
   //    "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
@@ -131,8 +128,8 @@ void setup() {
    root["TDS"] = TDS;
    root["Turbidity"] = turp;
    root["Conductivity"] = cond;
-
-
+*/
+/*
   char ssid[] = "";
   char pass[] = "";
   
@@ -179,7 +176,7 @@ void setup() {
     Serial.println(statusCode);
     Serial.print("Response: ");
     Serial.println(response);
-  
+  */
     
    
    
@@ -242,6 +239,7 @@ float getConductivity(){
   
     printTime=millis();
     averageVoltage=ECReading*(float)5000/1024;
+    /*
     Serial.print("Analog value:");
     Serial.print(ECReading);   //analog average,from 0 to 1023
     Serial.print("    Voltage:");
@@ -249,9 +247,9 @@ float getConductivity(){
     Serial.print("mV    ");
     Serial.print("temp:");
     Serial.print(temperature);    //current temperature
-    Serial.print("^C     EC:");
+    Serial.print("^C     EC:");*/
     
-    float TempCoefficient=1.0+0.0185*(temperature-25.0);    //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
+    float TempCoefficient=1.0+0.0185*(25.0-25.0);    //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
     float CoefficientVolatge=(float)averageVoltage/TempCoefficient;   
     if(CoefficientVolatge<150)Serial.println("No solution!");   //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
     else if(CoefficientVolatge>3300)Serial.println("Out of the range!");  //>20ms/cm,out of the range
@@ -265,7 +263,7 @@ float getConductivity(){
       Serial.println("ms/cm");
     }
 
-    return averageVoltage;
+    return ECcurrent;
   }
   
 
@@ -329,6 +327,7 @@ double getPH(){
     //}
     //if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
     //{
+    /*
     Serial.print("Voltage:");
           Serial.print(voltage,2);
           Serial.print("    pH value: ");
@@ -336,7 +335,7 @@ double getPH(){
           digitalWrite(LED,digitalRead(LED)^1);
           Serial.print(LED);        
           printTime=millis();
-
+      */
           return pHValue;
     //}
   //return 0.0;
@@ -349,8 +348,8 @@ double getTDS(){
     gravityTds.setTemperature(temperature);  // set the temperature and execute temperature compensation
     gravityTds.update();  //sample and calculate 
     tdsValue = gravityTds.getTdsValue();  // then get the value
-    Serial.print(tdsValue,0);
-    Serial.println("ppm");
+    //Serial.print(tdsValue,0);
+    //Serial.println("ppm");
 
 
     return tdsValue;
@@ -415,7 +414,3 @@ double avergearray(int* arr, int number){
   }//if
   return avg;
 }
-
-
-
-
