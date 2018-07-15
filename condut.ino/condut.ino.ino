@@ -20,9 +20,9 @@
 #define StartConvert 0
 #define ReadTemperature 1
 
-const byte numReadings = 20;     //the number of sample times
+const byte numReadings = 50;     //the number of sample times
 byte ECsensorPin = 3;  //EC Meter analog output,pin on analog 1
-byte DS18B20_Pin = 4; //DS18B20 signal, pin on digital 2
+byte DS18B20_Pin = 2; //DS18B20 signal, pin on digital 2
 unsigned int AnalogSampleInterval=25,printInterval=700,tempSampleInterval=850;  //analog sample interval;serial print interval;temperature sample interval
 unsigned int readings[numReadings];      // the readings from the analog input
 byte index = 0;                  // the index of the current reading
@@ -94,7 +94,7 @@ void loop() {
     Serial.print(temperature);    //current temperature
     Serial.print("^C     EC:");
     
-    float TempCoefficient=1.0+0.0185*(25.0-25.0);    //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
+    float TempCoefficient=1.0+0.0185*(29.0-25.0);    //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
     float CoefficientVolatge=(float)averageVoltage/TempCoefficient;   
     if(CoefficientVolatge<150)Serial.println("No solution!");   //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
     else if(CoefficientVolatge>3300)Serial.println("Out of the range!");  //>20ms/cm,out of the range

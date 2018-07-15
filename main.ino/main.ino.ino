@@ -27,7 +27,6 @@ float temperature = 25,tdsValue = 0;
 /*PH varialbes*/
 #define SensorPin 2            //pH meter Analog output to Arduino Analog Input 0
 #define Offset 0.00            //deviation compensate
-#define LED 13
 #define samplingInterval 20
 #define printinterval 800
 #define ArrayLenth  40    //times of collection
@@ -72,7 +71,7 @@ void setup() {
 
   //Conductivity SET UP
   // initialize serial communication with computer:
-  Serial.begin(115200);
+  //Serial.begin(115200);
   // initialize all the readings to 0:
   for (byte thisReading = 0; thisReading < numReadings; thisReading++)
     readings[thisReading] = 0;
@@ -86,13 +85,20 @@ void setup() {
   
   
   //add everything in to json object
-
+  
   float turp = getTurpidity();
   float cond = getConductivity();
   float PH = getPH();
   float ORP = getORP();
   double TDS = getTDS();
 
+  /*
+  float turp = 5;
+  float cond = 6;
+  float PH = 7;
+  float ORP = 8;
+  double TDS = 9;
+  */
   Serial.print("Conductivity:");
   Serial.println(cond);
   Serial.print("PH:");
@@ -111,7 +117,7 @@ void setup() {
   //char json[] =
   //    "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
   //char *json = new char[];
-  char json[] = "{\"ORP\":\"\",\"PH\":\"\",\"TDS\":\"\",\"Turbidity\":\"\",:\"Conductivity\"::\"\"}";
+  char json[] = "{\"ORP\":\"\",\"PH\":\"\",\"TDS\":\"\",\"Turbidity\":\"\",\"Conductivity\":\"\"}";
 
   JsonObject& root = jsonBuffer.parseObject(json);
 
@@ -128,22 +134,22 @@ void setup() {
    root["TDS"] = TDS;
    root["Turbidity"] = turp;
    root["Conductivity"] = cond;
-*/
-/*
-  char ssid[] = "";
-  char pass[] = "";
+
+
+  char ssid[] = "builds-sec";
+  char pass[] = "beardbeard";
   
   
   char serverAddress[] = "127.0.0.1";  // server address
-  int port = 5000;
-  
-  WiFiClient wifi;
+    int port = 5000;
+    
+    WiFiClient wifi;
   HttpClient client = HttpClient(wifi, serverAddress, port);
   int status = WL_IDLE_STATUS;
   String response;
   int statusCode = 0;
-  
-  
+  status = WiFi.begin(ssid, pass);
+  Serial.println("the status is " + status);
     while ( status != WL_CONNECTED) {
       Serial.print("Attempting to connect to Network named: ");
       Serial.println(ssid);                   // print the network name (SSID);
@@ -176,12 +182,7 @@ void setup() {
     Serial.println(statusCode);
     Serial.print("Response: ");
     Serial.println(response);
-  */
-    
-   
-   
-
-  
+    */
 }
 
 void loop() {
@@ -194,8 +195,12 @@ float getTurpidity(){
       int sensorValue = analogRead(turpPin);// read the input on analog pin 0:
       float voltage = sensorValue * (5.0 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
       //Serial.println(voltage); // print out the value you read:
+      if(voltage < 2.5){
+        return 3000.0;
+      }
 
-      return voltage;
+      float fin = (-1120.4 * (voltage * voltage) + 5742.3 * voltage - 4352.9) ;
+      return fin;
   }
 
 
@@ -365,13 +370,22 @@ int getORP(){
   static unsigned long printTime=millis();
   
     orpTimer=millis()+20;
-    int ORPData =analogRead(orpPin);   
+    int ORPData =analogRead(orpPin);
+    int data[40];
+    int temp;
+    for(int i =0 ; i<40;i++){
+      temp = analogRead(orpPin);
+      data[i] = ((30*(double)2.0*1000)-(75*temp*5.0*1000/1024))/75-OFFSET;
+    }
+
+    double finalVal = avergearray(data,10);
+    
     if (orpArrayIndex==ArrayLenth) {
       orpArrayIndex=0;
     }   
     int orpValue=((30*(double)5.0*1000)-(75*ORPData*5.0*1000/1024))/75-OFFSET;  
     return((int)orpValue);
-    
+    //return finalVal;
 }
 
 
