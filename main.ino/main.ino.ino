@@ -86,19 +86,9 @@ void setup() {
   
   //add everything in to json object
   
-  float turp = getTurpidity();
-  float cond = getConductivity();
-  float PH = getPH();
-  float ORP = getORP();
-  double TDS = getTDS();
-
+  
+  String currDate = "9/20/2018";
   /*
-  float turp = 5;
-  float cond = 6;
-  float PH = 7;
-  float ORP = 8;
-  double TDS = 9;
-  */
   Serial.print("Conductivity:");
   Serial.println(cond);
   Serial.print("PH:");
@@ -108,86 +98,38 @@ void setup() {
   Serial.print("TDS:");
   Serial.println(TDS);
   Serial.print("Turp:");
-  Serial.println(turp);
+  Serial.println(turp);*/
   
-  // SET UP THE JSON OBJECT
-
-  /*
-  StaticJsonBuffer<200> jsonBuffer;
-  //char json[] =
-  //    "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
-  //char *json = new char[];
-  char json[] = "{\"ORP\":\"\",\"PH\":\"\",\"TDS\":\"\",\"Turbidity\":\"\",\"Conductivity\":\"\"}";
-
-  JsonObject& root = jsonBuffer.parseObject(json);
-
-  // Test if parsing succeeds.
-  if (!root.success()) {
-    Serial.println("parseObject() failed");
-    return;
-  }else{
-    Serial.println("Parse object worked");
-    }
-      
-   root["ORP"] = ORP;
-   root["PH"] = PH;
-   root["TDS"] = TDS;
-   root["Turbidity"] = turp;
-   root["Conductivity"] = cond;
-
-
-  char ssid[] = "builds-sec";
-  char pass[] = "beardbeard";
+  String response = "{\" "+currDate+" \":[";
   
-  
-  char serverAddress[] = "127.0.0.1";  // server address
-    int port = 5000;
+
+  for(int i=0;i<50;i++){
+    if(i >= 49){
+        response += getSample();
+    }else{
+        response += getSample() + ",";
+      }
     
-    WiFiClient wifi;
-  HttpClient client = HttpClient(wifi, serverAddress, port);
-  int status = WL_IDLE_STATUS;
-  String response;
-  int statusCode = 0;
-  status = WiFi.begin(ssid, pass);
-  Serial.println("the status is " + status);
-    while ( status != WL_CONNECTED) {
-      Serial.print("Attempting to connect to Network named: ");
-      Serial.println(ssid);                   // print the network name (SSID);
-  
-      // Connect to WPA/WPA2 network:
-      status = WiFi.begin(ssid, pass);
-    }
-  
-    // print the SSID of the network you're attached to:
-    Serial.print("SSID: ");
-    Serial.println(WiFi.SSID());
-  
-    // print your WiFi shield's IP address:
-    IPAddress ip = WiFi.localIP();
-    Serial.print("IP Address: ");
-    Serial.println(ip);
+  }
+  response += "]}";
+  Serial.println(response);
 
-
-    Serial.println("making POST request");
-    String contentType = "application/x-www-form-urlencoded";
-    String postData = "name=Alice&age=12";
   
-    client.post("/", contentType, postData);
-  
-    // read the status code and body of the response
-    statusCode = client.responseStatusCode();
-    response = client.responseBody();
-  
-    Serial.print("Status code: ");
-    Serial.println(statusCode);
-    Serial.print("Response: ");
-    Serial.println(response);
-    */
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   return;
+}
+
+String getSample(){
+  float turp = getTurpidity();
+  float cond = getConductivity();
+  float PH = getPH();
+  float ORP = getORP();
+  double TDS = getTDS();
+  String response = "{\"Conductivity\":" + (String)cond + ", \"PH\":" + (String)PH + ", \"ORP\":"+(String)ORP + ", \"TDS\":"+(String)TDS + ", \"Turp\": "+ (String)turp + "}";
+  return response;
 }
 
 /*Turpidity function*/
@@ -264,8 +206,8 @@ float getConductivity(){
       else if(CoefficientVolatge<=1457)ECcurrent=6.98*CoefficientVolatge-127;  //3ms/cm<EC<=10ms/cm
       else ECcurrent=5.3*CoefficientVolatge+2278;                           //10ms/cm<EC<20ms/cm
       ECcurrent/=1000;    //convert us/cm to ms/cm
-      Serial.print(ECcurrent,2);  //two decimal
-      Serial.println("ms/cm");
+      //Serial.print(ECcurrent,2);  //two decimal
+      //Serial.println("ms/cm");
     }
 
     return ECcurrent;
@@ -281,7 +223,7 @@ float TempProcess(bool ch)
   static float TemperatureSum;
   if(!ch){
           if ( !ds.search(addr)) {
-              Serial.println("no more sensors on chain, reset search!");
+              //Serial.println("no more sensors on chain, reset search!");
               ds.reset_search();
               return 0;
           }      
