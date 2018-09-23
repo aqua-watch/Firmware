@@ -5,7 +5,7 @@
 #include "GravityTDS.h"
 #include <OneWire.h>
 #include <ArduinoHttpClient.h>
-
+#include <WiFi101.h>
 
 #define VOLTAGE 5.00    //system voltage
 #define OFFSET 0        //zero drift voltage
@@ -27,7 +27,6 @@ float temperature = 25,tdsValue = 0;
 /*PH varialbes*/
 #define SensorPin 2            //pH meter Analog output to Arduino Analog Input 0
 #define Offset 0.00            //deviation compensate
-#define LED 13
 #define samplingInterval 20
 #define printinterval 800
 #define ArrayLenth  40    //times of collection
@@ -55,9 +54,6 @@ OneWire ds(DS18B20_Pin);  // on digital pin 2
 //Turp variables
 #define turpPin 5
 
-
-
-
 void setup() {
   
   Serial.begin(9600);
@@ -75,7 +71,7 @@ void setup() {
 
   //Conductivity SET UP
   // initialize serial communication with computer:
-  Serial.begin(115200);
+  //Serial.begin(115200);
   // initialize all the readings to 0:
   for (byte thisReading = 0; thisReading < numReadings; thisReading++)
     readings[thisReading] = 0;
@@ -89,13 +85,10 @@ void setup() {
   
   
   //add everything in to json object
-
-  float turp = getTurpidity();
-  float cond = getConductivity();
-  float PH = getPH();
-  float ORP = getORP();
-  double TDS = getTDS();
-
+  
+  
+  String currDate = "9/20/2018";
+  /*
   Serial.print("Conductivity:");
   Serial.println(cond);
   Serial.print("PH:");
@@ -105,35 +98,21 @@ void setup() {
   Serial.print("TDS:");
   Serial.println(TDS);
   Serial.print("Turp:");
-  Serial.println(turp);
+  Serial.println(turp);*/
   
-  // SET UP THE JSON OBJECT
-
+  String response = "{\" "+currDate+" \":[";
   
-  StaticJsonBuffer<200> jsonBuffer;
-  //char json[] =
-  //    "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
-  //char *json = new char[];
-  char json[] = "{\"ORP\":\"\",\"PH\":\"\",\"TDS\":\"\",\"Turbidity\":\"\",:\"Conductivity\"::\"\"}";
 
-  JsonObject& root = jsonBuffer.parseObject(json);
-
-  // Test if parsing succeeds.
-  if (!root.success()) {
-    Serial.println("parseObject() failed");
-    return;
-  }else{
-    Serial.println("Parse object worked");
-    }
-      
-   root["ORP"] = ORP;
-   root["PH"] = PH;
-   root["TDS"] = TDS;
-   root["Turbidity"] = turp;
-   root["conductivity"] = cond;
-
-   
-   
+  for(int i=0;i<50;i++){
+    if(i >= 49){
+        response += getSample();
+    }else{
+        response += getSample() + ",";
+      }
+    
+  }
+  response += "]}";
+  Serial.println(response);
 
   
 }
@@ -143,13 +122,27 @@ void loop() {
   return;
 }
 
+String getSample(){
+  float turp = getTurpidity();
+  float cond = getConductivity();
+  float PH = getPH();
+  float ORP = getORP();
+  double TDS = getTDS();
+  String response = "{\"Conductivity\":" + (String)cond + ", \"PH\":" + (String)PH + ", \"ORP\":"+(String)ORP + ", \"TDS\":"+(String)TDS + ", \"Turp\": "+ (String)turp + "}";
+  return response;
+}
+
 /*Turpidity function*/
 float getTurpidity(){
       int sensorValue = analogRead(turpPin);// read the input on analog pin 0:
       float voltage = sensorValue * (5.0 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
       //Serial.println(voltage); // print out the value you read:
+      if(voltage < 2.5){
+        return 3000.0;
+      }
 
-      return voltage;
+      float fin = (-1120.4 * (voltage * voltage) + 5742.3 * voltage - 4352.9) ;
+      return fin;
   }
 
 
@@ -193,6 +186,7 @@ float getConductivity(){
   
     printTime=millis();
     averageVoltage=ECReading*(float)5000/1024;
+    /*
     Serial.print("Analog value:");
     Serial.print(ECReading);   //analog average,from 0 to 1023
     Serial.print("    Voltage:");
@@ -200,9 +194,9 @@ float getConductivity(){
     Serial.print("mV    ");
     Serial.print("temp:");
     Serial.print(temperature);    //current temperature
-    Serial.print("^C     EC:");
+    Serial.print("^C     EC:");*/
     
-    float TempCoefficient=1.0+0.0185*(temperature-25.0);    //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
+    float TempCoefficient=1.0+0.0185*(25.0-25.0);    //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
     float CoefficientVolatge=(float)averageVoltage/TempCoefficient;   
     if(CoefficientVolatge<150)Serial.println("No solution!");   //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
     else if(CoefficientVolatge>3300)Serial.println("Out of the range!");  //>20ms/cm,out of the range
@@ -212,11 +206,11 @@ float getConductivity(){
       else if(CoefficientVolatge<=1457)ECcurrent=6.98*CoefficientVolatge-127;  //3ms/cm<EC<=10ms/cm
       else ECcurrent=5.3*CoefficientVolatge+2278;                           //10ms/cm<EC<20ms/cm
       ECcurrent/=1000;    //convert us/cm to ms/cm
-      Serial.print(ECcurrent,2);  //two decimal
-      Serial.println("ms/cm");
+      //Serial.print(ECcurrent,2);  //two decimal
+      //Serial.println("ms/cm");
     }
 
-    return averageVoltage;
+    return ECcurrent;
   }
   
 
@@ -229,7 +223,7 @@ float TempProcess(bool ch)
   static float TemperatureSum;
   if(!ch){
           if ( !ds.search(addr)) {
-              Serial.println("no more sensors on chain, reset search!");
+              //Serial.println("no more sensors on chain, reset search!");
               ds.reset_search();
               return 0;
           }      
@@ -280,6 +274,7 @@ double getPH(){
     //}
     //if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
     //{
+    /*
     Serial.print("Voltage:");
           Serial.print(voltage,2);
           Serial.print("    pH value: ");
@@ -287,7 +282,7 @@ double getPH(){
           digitalWrite(LED,digitalRead(LED)^1);
           Serial.print(LED);        
           printTime=millis();
-
+      */
           return pHValue;
     //}
   //return 0.0;
@@ -300,8 +295,8 @@ double getTDS(){
     gravityTds.setTemperature(temperature);  // set the temperature and execute temperature compensation
     gravityTds.update();  //sample and calculate 
     tdsValue = gravityTds.getTdsValue();  // then get the value
-    Serial.print(tdsValue,0);
-    Serial.println("ppm");
+    //Serial.print(tdsValue,0);
+    //Serial.println("ppm");
 
 
     return tdsValue;
@@ -317,13 +312,22 @@ int getORP(){
   static unsigned long printTime=millis();
   
     orpTimer=millis()+20;
-    int ORPData =analogRead(orpPin);   
+    int ORPData =analogRead(orpPin);
+    int data[40];
+    int temp;
+    for(int i =0 ; i<40;i++){
+      temp = analogRead(orpPin);
+      data[i] = ((30*(double)2.0*1000)-(75*temp*5.0*1000/1024))/75-OFFSET;
+    }
+
+    double finalVal = avergearray(data,10);
+    
     if (orpArrayIndex==ArrayLenth) {
       orpArrayIndex=0;
     }   
     int orpValue=((30*(double)5.0*1000)-(75*ORPData*5.0*1000/1024))/75-OFFSET;  
     return((int)orpValue);
-    
+    //return finalVal;
 }
 
 
@@ -366,7 +370,3 @@ double avergearray(int* arr, int number){
   }//if
   return avg;
 }
-
-
-
-
