@@ -19,9 +19,30 @@ def queryPoint(query, model = None):
             model = f.read().replace('\n', '')
             model = json.loads(model)
         #left todo
+
+def centerPoint(data_set, dims = 5):
+    center = [0] * dims
+    for i in range(0, dims): #for the i'th dimension
+        try:
+           sample = [list(data_set[j].values())[i] for j in range(0, len(data_set)) ]
+        except IndexError:
+           print('not enough keys')
+        rsum = 0.0
+        members = 2 * len(sample)
+        for el in sample: #for each data point in the ith dimension
+            # 2 * (xi - el) => (2 * len(sample)) + rsum (2 * el) = 0
+            rsum += 2 * el
+            
+        center[i] = (rsum) / members
+        #center[i] = (-1 * rsum) / members
+    
+    print(center)
+    return center
+        
+        
             
 
-def centerPoint(data_set):
+def closestPoint(data_set):
     avgs = []
     for i in range(0, len(data_set) - 1):
         r_avg = 0.0
@@ -37,8 +58,7 @@ def centerPoint(data_set):
         if(avgs[idx] < min_val[1]):
             min_val = (idx, avgs[idx])
             
-            
-    print(min_val)
+   
     return data_set[min_val[0]]
 
 def euclideanDistance(instance1, instance2):
@@ -80,12 +100,15 @@ def main():
     if(action == 0):
         data = openLatestOutput()
         normalized_data = normalizeDataSet(data[list(data.keys())[0]])
-        center = centerPoint(normalized_data)
+        
+        center_point = centerPoint(normalized_data)
+        closest_point = closestPoint(normalized_data)
         final_obj = {}
         final_obj[list(data.keys())[0]] = {
                     "desc" : 'some stuff',
                     "results" : data[list(data.keys())[0]],
-                    "center" : center
+                    "closest_point" : closest_point,
+                    "center_point"  : center_point
                 }
         addToModel(final_obj)
         pprint("Done!")

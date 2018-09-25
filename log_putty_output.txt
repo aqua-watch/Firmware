@@ -1,0 +1,10 @@
+=~=~=~=~=~=~=~=~=~=~=~= PuTTY log 2018.09.20 13:18:41 =~=~=~=~=~=~=~=~=~=~=~=
+no more sensors on chain, reset search!
+no more sensors on chain, reset search!
+1.67ms/cm
+Conductivity:1.67
+PH:7.43
+ORP:76.00
+TDS:0.00
+Turp:2692.14
+Parse object worked
