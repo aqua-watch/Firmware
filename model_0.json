@@ -2,6 +2,7 @@
 	"Exps": [{
 		"timeStamp": "9/29/2018",
 		"desc": "Plain water with vinegar",
+		"contaminated": 0,
 		"results": [{
 			"Conductivity": -0.7851929043577127,
 			"PH": -0.694250653265955,
@@ -327,6 +328,7 @@
 	}, {
 		"timeStamp": "2018-10-01",
 		"desc": "lead:104.7625.cm^2 after 1 hour",
+		"contaminated": 1,
 		"results": [{
 			"Conductivity": -1.112594694143899,
 			"PH": -1.0809098385250107,
@@ -652,6 +654,7 @@
 	}, {
 		"timeStamp": "2018-10-01",
 		"desc": "lead:104.7625.cm^2 after 2 hour",
+		"contaminated": 1,
 		"results": [{
 			"Conductivity": -0.8783831932574423,
 			"PH": -0.8499922668598209,
@@ -977,6 +980,7 @@
 	}, {
 		"timeStamp": "2018-10-01",
 		"desc": "lead:104.7625.cm^2 after 23 hour",
+		"contaminated": 1,
 		"results": [{
 			"Conductivity": -1.1360063192463892,
 			"PH": -1.10833216980593,
@@ -1302,6 +1306,7 @@
 	}, {
 		"timeStamp": "2018-10-14",
 		"desc": "lead:104.7625.cm^2 after 502 hour",
+		"contaminated": 1,
 		"results": [{
 			"Conductivity": -0.5997067297338808,
 			"PH": -0.5920914061817045,

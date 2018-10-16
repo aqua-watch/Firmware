@@ -112,14 +112,17 @@ def euclideanDistance(instance1, instance2):
 		distance += pow((instance1[k] - instance2[k]), 2)
 	return math.sqrt(distance)
 
-def addToModel(add):
+def addToModel(add, fileName = None):
+    if fileName == None: 
+        fileName = 'model.json'
+    
     #load the model first
     model = {}
-    with open('model.json') as f:
+    with open(fileName) as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
-    with open('model.json', 'w') as f:
+    with open(fileName, 'w+') as f:
             model['Exps'].append(add)
             pprint(model)
             json.dump(model, f)
@@ -150,26 +153,26 @@ def testAccuracy():
     accuracy_w_cont = correct_w_lead / len(queries_w_lead)
     accuracy_no_cont = correct_no_lead / len(queries_no_lead)
     print("Accuracy with contaminant: " + str(accuracy_w_cont) + "\n With out contaminant: " + str(accuracy_no_cont))
-    
-    
 
 def openLatestOutput():
     with open('log_putty_output.txt') as f:
         try:
             data = f.read().replace('\n', '').split("~=\"Con")[1]
         except:
-            data = '{" 9/20/2018 ":[{"Conductivity":1.54, "PH":6.58, "ORP":286.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.54, "PH":6.55, "ORP":242.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.58, "ORP":300.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.54, "PH":6.67, "ORP":256.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.65, "ORP":330.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.67, "ORP":398.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.70, "ORP":393.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.54, "PH":6.56, "ORP":349.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.56, "ORP":286.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.56, "ORP":291.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.53, "ORP":261.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.60, "ORP":295.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.70, "ORP":403.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.70, "ORP":339.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.67, "ORP":359.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.61, "ORP":378.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.58, "ORP":315.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.55, "ORP":261.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.56, "ORP":300.00, "TDS":181.18, "Turp": 180.16},{"Conductivity":1.54, "PH":6.56, "ORP":251.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.60, "ORP":271.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.68, "ORP":432.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.68, "ORP":334.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.65, "ORP":344.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.54, "PH":6.67, "ORP":388.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.58, "ORP":237.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.55, "ORP":242.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.55, "ORP":281.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.56, "ORP":286.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.65, "ORP":256.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.65, "ORP":344.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.70, "ORP":393.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.68, "ORP":354.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.56, "ORP":354.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.58, "ORP":261.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.56, "ORP":247.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.53, "ORP":251.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.58, "ORP":295.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.68, "ORP":256.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.67, "ORP":334.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.65, "ORP":383.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.68, "ORP":378.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.56, "ORP":344.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.55, "ORP":305.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.57, "PH":6.58, "ORP":281.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.54, "PH":6.55, "ORP":261.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.54, "PH":6.61, "ORP":295.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.68, "ORP":422.00, "TDS":184.90, "Turp": 180.16},{"Conductivity":1.57, "PH":6.68, "ORP":334.00, "TDS":184.90, "Turp": 162.77},{"Conductivity":1.54, "PH":6.65, "ORP":330.00, "TDS":184.90, "Turp": 180.16}]}'
+            data = '{" 9/20/2018 ":[{"Conductivity":1.54, "PH":9.18, "ORP":164.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.26, "ORP":271.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.18, "ORP":159.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.25, "ORP":237.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.26, "ORP":178.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.19, "ORP":203.00, "TDS":85.37, "Turp": 249.23},{"Conductivity":1.54, "PH":9.28, "ORP":256.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.26, "ORP":178.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.21, "ORP":261.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.28, "ORP":271.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.19, "ORP":173.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.21, "ORP":256.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.28, "ORP":251.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.57, "PH":9.19, "ORP":178.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.25, "ORP":256.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.28, "ORP":168.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.21, "ORP":193.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.28, "ORP":242.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.26, "ORP":193.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.19, "ORP":237.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.25, "ORP":212.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.18, "ORP":154.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.57, "PH":9.23, "ORP":242.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.25, "ORP":159.00, "TDS":85.37, "Turp": 249.23},{"Conductivity":1.54, "PH":9.18, "ORP":183.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.26, "ORP":212.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.19, "ORP":149.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.19, "ORP":251.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.26, "ORP":286.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.21, "ORP":168.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.57, "PH":9.26, "ORP":251.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.26, "ORP":183.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.21, "ORP":261.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.28, "ORP":256.00, "TDS":85.37, "Turp": 249.23},{"Conductivity":1.54, "PH":9.19, "ORP":183.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.21, "ORP":232.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.57, "PH":9.26, "ORP":159.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.19, "ORP":168.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.26, "ORP":237.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.25, "ORP":159.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.18, "ORP":154.00, "TDS":85.37, "Turp": 249.23},{"Conductivity":1.54, "PH":9.26, "ORP":222.00, "TDS":85.37, "Turp": 232.04},{"Conductivity":1.54, "PH":9.23, "ORP":149.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.18, "ORP":232.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.26, "ORP":242.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.54, "PH":9.18, "ORP":154.00, "TDS":81.41, "Turp": 232.04},{"Conductivity":1.57, "PH":9.21, "ORP":232.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.25, "ORP":164.00, "TDS":81.41, "Turp": 249.23},{"Conductivity":1.54, "PH":9.18, "ORP":164.00, "TDS":81.41, "Turp": 232.04}]}'
                 
         return json.loads(data) 
         
 def normalizeDataSet(dataSet):
-    for data in dataSet:
+    cp_data  = dataSet
+    
+    for data in cp_data:
         mean = sum(data.values()) / len(data.values())
         std = np.std(list(data.values()))
         for k,v in data.items():
             data[k] = (v - mean) / std
         
-    return dataSet
+    return cp_data
 
    
 def main():
@@ -177,23 +180,41 @@ def main():
     action = int(input())
     if(action == 0):
         data = openLatestOutput()
+        absolute = data[list(data.keys())[0]]
+        center_point_absolute = centerPoint(absolute)
+        closest_point_absolute = closestPoint(absolute)
+        standards_absolute = standard_dev_cluster(absolute, center_point_absolute)
+        ##for our absolute samples
+        final_obj = {}
+        final_obj = {
+                    "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
+                    "desc" : 'Tap water',
+                    "contaminated" : 0,
+                    "results" : data[list(data.keys())[0]],
+                    "closest_point" : closest_point_absolute,
+                    "center_point"  : center_point_absolute,
+                    'standard_deviation': standards_absolute
+                }
+        addToModel(final_obj, "tap_water_absolute.json")
         normalized_data = normalizeDataSet(data[list(data.keys())[0]])
+        
         
         center_point = centerPoint(normalized_data)
         closest_point = closestPoint(normalized_data)
         standards = standard_dev_cluster(normalized_data, center_point)
-        
+     
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'With lead 102 cm^2, 60 min',
-                    "contaminated" : 1,
+                    "desc" : 'Tap water',
+                    "contaminated" : 0,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
         addToModel(final_obj)
+        
         pprint("Done!")
     elif(action == 1):
         
