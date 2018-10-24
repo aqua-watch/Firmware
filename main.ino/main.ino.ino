@@ -370,3 +370,11 @@ double avergearray(int* arr, int number){
   }//if
   return avg;
 }
+
+byte stringChecksum(char *s)
+{
+    byte c = 0;
+    while(*s != '\0')
+        c ^= *s++; 
+    return c;
+}
