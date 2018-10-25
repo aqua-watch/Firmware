@@ -5,46 +5,13 @@ Created on Mon Oct  8 14:34:21 2018
 @author: Armin
 """
 import json
-
 from sklearn.datasets import load_iris
 from sklearn.linear_model import LogisticRegression
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
-
-
-def formatModel():
-    #take our json object and convert to tabular format
-    model = {}  
-    with open('model_1.json') as f:
-        model = f.read().replace('\n', '')
-        model = json.loads(model)
-    model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  
-    experiments =  model["Exps"]
-    ix = 0 #index of df
-    for exp in experiments:
-        insert = []
-        desc = exp["desc"]
-        ts = exp["timeStamp"]
-        contaminated = exp["contaminated"]
-        
-        for result in exp["results"]:
-            insert = []
-            insert.append(result["Conductivity"])
-            insert.append(result["PH"])
-            insert.append(result["ORP"])
-            insert.append(result["Turp"])
-            insert.append(result["TDS"])
-            insert.append(desc)
-            insert.append(ts)
-            insert.append(contaminated)
-            
-            model_df.loc[ix] = (insert)
-            ix += 1
-            
-    
-    return model_df
+import formatModels
 
 def build_model(model_df):
     #split data
@@ -75,7 +42,7 @@ def build_model(model_df):
     print(result)
     
     
-model_df = formatModel()
+model_df = formatModels.formatModel()
 build_model(model_df)
 
 #print(model_df)

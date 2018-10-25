@@ -255,8 +255,6 @@ float TempProcess(bool ch)
           return TemperatureSum;  
 }
 
-
-
 /* PH functions*/
 double getPH(){
     static unsigned long samplingTime = millis();
@@ -302,7 +300,6 @@ double getTDS(){
     return tdsValue;
   
   }
-
 
 /*ORP FUNCTION*/
 
