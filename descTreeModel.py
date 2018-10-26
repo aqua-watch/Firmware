@@ -18,7 +18,7 @@ import graphviz
 from sklearn.tree import export_graphviz
 from sklearn.tree import _tree
 import os
-os.environ["PATH"] += os.pathsep + 'D:/Program Files (x86)/Graphviz2.38/bin/'
+
 def build_model(model_df):
     #split data
     X = []
@@ -28,8 +28,11 @@ def build_model(model_df):
         y.append(row["Contaminated"])
         
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, stratify = y)
-    tree = DecisionTreeClassifier(max_depth=4, random_state=0, max_leaf_nodes=10 )
+    print(X_train)    
+    
+    tree = DecisionTreeClassifier(max_depth=4, random_state=0)
     tree.fit(X_train, y_train)
+    
     
     print("Accuracy on training dataset: ({0:.6f}) ".format( tree.score(X_train , y_train)))
     print("Accuracy on testing dataset: ({0:.6f}) ".format( tree.score(X_test , y_test)))
@@ -56,7 +59,7 @@ def build_model(model_df):
                          filled=True, rounded=True,  
                          special_characters=True) 
     graph = graphviz.Source(dot_data) 
-    graph.render("descTreeExample") 
+    #graph.render("descTreeExample") 
     
 def tree_to_code(tree, feature_names):
     tree_ = tree.tree_

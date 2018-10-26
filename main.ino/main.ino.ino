@@ -109,7 +109,8 @@ void setup() {
     }else{
         response += getSample() + ",";
       }
-    
+
+      //delay(500);
   }
   response += "]}";
   Serial.println(response);
