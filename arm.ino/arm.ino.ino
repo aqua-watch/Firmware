@@ -1,0 +1,49 @@
+#include <Servo.h> 
+ 
+// create 4 "servo objects"
+Servo clawturn, left, right, claw,base, up, down;  
+
+int ct_p,left_p,right_p,claw_p,base_p;
+int move_flag = 0;
+void setup() 
+{ 
+  Serial.begin(9600);
+  right.attach(12);
+  claw.attach(9);  // attaches the servo on pin 11 to the middle object
+  clawturn.attach(10);  // attaches the servo on pin 10 to the left object
+  base.attach(11);  // attaches the servo on pin 9 to the right object
+  left.attach(13);  // attaches the servo on pin 6 to the claw object
+  //up.attach();
+  //down.attach();
+  
+  ct_p = 90;
+  claw_p = 50;
+  right_p = 50;
+  left_p = 80;
+  base_p = 90;//initialization values
+
+} 
+ 
+void loop() 
+{ 
+  
+  
+  claw.write(claw_p);
+  clawturn.write(ct_p);
+  
+  right.write(right_p);
+  left.write(left_p);
+  base.write(base_p);
+  if(base_p == 0){
+    move_flag = 1;
+    }else if(base_p == 90){
+        move_flag = 0;
+      }
+  delay(50);
+  if ((base_p > 0) && move_flag == 0)
+  {
+    base_p -= 2;
+  }else if(move_flag == 1){
+      base_p += 2;
+    }
+}
