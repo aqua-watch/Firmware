@@ -30,7 +30,7 @@ def build_model(model_df):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, stratify = y)
     print(X_train)    
     
-    tree = DecisionTreeClassifier(max_depth=4, random_state=0)
+    tree = DecisionTreeClassifier()
     tree.fit(X_train, y_train)
     
     
@@ -53,12 +53,14 @@ def build_model(model_df):
     #and print
     dot_data = export_graphviz(tree, out_file='descTreeExample.dot', class_names=['Contaminated', 'Uncontaminated'], feature_names=['Cond','PH', 'ORP', 'TDS', 'Turb'],
                impurity=False, filled=True)
+    """
     dot_data = export_graphviz(tree, out_file=None, 
                          feature_names=['Cond','PH', 'ORP', 'TDS', 'Turb'],  
                         
                          filled=True, rounded=True,  
                          special_characters=True) 
     graph = graphviz.Source(dot_data) 
+    """
     #graph.render("descTreeExample") 
     
 def tree_to_code(tree, feature_names):
