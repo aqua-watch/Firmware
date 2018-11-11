@@ -12,6 +12,7 @@ from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
 import formatModels
+from getTestingSet import createTestingSet
 
 def build_model(model_df):
     #split data
@@ -28,18 +29,26 @@ def build_model(model_df):
     
     print("Accuracy on training dataset: ({0:.6f}) ".format( clf.score(X_train , y_train)))
     print("Accuracy on testing dataset: ({0:.6f}) ".format( clf.score(X_test , y_test)))
-
-    x = [[
-			0.7851929043577127,
-			-0.694250653265955,
-			 0.20470726985476198,
-			 1.8716911902092956,
-			 -0.5969549024403896
-		]]
     
-    result = clf.predict(x)
+    testingModel = createTestingSet()
+    total = len(testingModel)
+    correct = 0
+    incorrect = 0
+    
+    for exp in testingModel:
+        res = clf.predict([list(exp["value"].values())])
+        if(res == 1 and exp["contaminated"] == 1 or res == 0 and exp["contaminated"] == 0):
+            correct += 1
+        else:
+            incorrect += 1
+            
+    print("Accuracy on mixed testing set: ({0:.6f}) ".format(correct / total))
+    
+   
+    
+    #result = clf.predict(x)
     #print(len(result))
-    print(result)
+    #print(result)
     
     
 model_df = formatModels.formatModel()

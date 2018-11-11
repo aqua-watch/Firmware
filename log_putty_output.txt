@@ -1,1 +1,0 @@
-log_putty_output.txt

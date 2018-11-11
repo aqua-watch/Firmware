@@ -7,10 +7,39 @@ Created on Mon Oct  8 13:42:37 2018
 import matplotlib.patches as mpatches
 from matplotlib import pyplot as plt
 import json
+import formatModels
+import sklearn.manifold
+import sklearn.metrics as metrics
+import matplotlib
+import numpy as np
+import random
 
+
+def random_color():
+    return list(np.random.choice(range(256), size=3))
+                 
+def plot_all_clusters():
+    model_df = formatModels.formatModel()
+    X = model_df.drop(['Desc','Timestamp','Contaminated'], axis=1).values
+    y = model_df['Contaminated']
+    
+    euclidean_dists = metrics.euclidean_distances(X)
+    mds = sklearn.manifold.MDS(n_components=2, max_iter=3000, eps=1e-9, random_state=0,
+                   dissimilarity="precomputed", n_jobs=1)
+    
+    fit = mds.fit(euclidean_dists)
+    pos = fit.embedding_
+    #colors = matplotlib.cm.rainbow(np.linspace(0, 1, len(X)))
+    colors = [random_color() for _ in range(0, len(X) // 50)] #amount of data points dev by size of clusters
+    color_idx = 0;
+    for idx in range(0, len(X) - 50, 50):
+        _ = plt.scatter(pos[:, 0][idx], pos[:, 1], s=8, edgecolor='k',  marker='o', color = colors[color_idx])
+        color_idx += 1
+    
+    #A = plt.scatter(pos[:, 0], pos[:, 1], s=8, edgecolor='k',  marker='o', color = colors[0])
 
 def center_plot():
-    ys = [15,30,45,60,75,90,105]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     ph = []
     cond = []
     orp = []
@@ -18,10 +47,10 @@ def center_plot():
     turp = []
     
     model = {}  
-    with open('distilled_water_model_norm.json') as f:
+    with open('5_min_model_norm.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
-    exps = model["Exps"][4:]
+    exps = model["Exps"]
     
     for exp in exps:       
         ph.append(exp["center_point"]["PH"])
@@ -31,11 +60,11 @@ def center_plot():
         turp.append(exp["center_point"]["Turp"])
     
     plt.figure(1)
-    plt.plot(ys, cond[0:-1], '-', label='Conductivity')
-    plt.plot(ys , ph[0:-1], '--', label='Ph')
-    plt.plot(ys, orp[0:-1], ':', label='ORP')
-    plt.plot( ys, tds[0:-1], '--y', label='TDS')
-    plt.plot(ys, turp[0:-1], '--g', label='Turbidity');
+    plt.plot(ys, cond, '-', label='Conductivity')
+    plt.plot(ys , ph, '--', label='Ph')
+    plt.plot(ys, orp, ':', label='ORP')
+    plt.plot( ys, tds, '--y', label='TDS')
+    plt.plot(ys, turp, '--g', label='Turbidity');
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.title("Center Points")
     plt.ylabel("Normalized sensor measurement")
@@ -45,22 +74,22 @@ def center_plot():
     
    # plt.legend()
     plt.draw()
-    plt.savefig('imgs/distilled_water_model_norm_means.png')
+    #plt.savefig('imgs/distilled_water_model_norm_means.png')
     plt.show()
 
 def standard_deviation_plot():
-    ys = [15,30,45,60,75,90,105,120]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     ph = []
     cond = []
     orp = []
     tds = []
     turp = []
     model = {}  
-    with open('distilled_water_model_norm.json') as f:
+    with open('5_min_model_norm.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
-    exps = model["Exps"][4:]
+    exps = model["Exps"]
     for exp in exps:
         ph.append(exp["standard_deviation"]["PH"])
         cond.append(exp["standard_deviation"]["Conductivity"])
@@ -80,14 +109,14 @@ def standard_deviation_plot():
     plt.xlabel("Minutes after lead added")
     
     plt.draw()
-    plt.savefig('imgs/distilled_water_model_norm_stds.png')
+   # plt.savefig('imgs/distilled_water_model_norm_stds.png')
     plt.show()
 
 def printPH():
-    ys = [0,0,0,15,30,45,60,75,90,105,120]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     ph = []
      
-    with open('distilled_water_model_absolute.json') as f:
+    with open('5_min_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -97,7 +126,7 @@ def printPH():
         
     
     plt.figure(1)
-    plt.plot( ys, ph[0:-1], '--', label='Ph')
+    plt.plot( ys, ph, '--', label='Ph')
     
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.title("Average PH values")
@@ -109,10 +138,10 @@ def printPH():
     plt.show()
 
 def printCond():
-    ys = [0,0,0,15,30,45,60,75,90,105,120]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     measurments = []
      
-    with open('distilled_water_model_absolute.json') as f:
+    with open('5_min_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -122,7 +151,7 @@ def printCond():
         
     
     plt.figure(1)
-    plt.plot( ys, measurments[0:-1], '--', label='Conductivity')
+    plt.plot( ys, measurments, '--', label='Conductivity')
     
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.title("Average conductivity values")
@@ -134,10 +163,10 @@ def printCond():
     plt.show()
     
 def printORP():
-    ys = [0,0,0,15,30,45,60,75,90,105,120]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     measurments = []
      
-    with open('distilled_water_model_absolute.json') as f:
+    with open('5_min_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -147,7 +176,7 @@ def printORP():
         
     
     plt.figure(1)
-    plt.plot( ys, measurments[0:-1], '--', label='ORP')
+    plt.plot( ys, measurments, '--', label='ORP')
     
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.title("Average ORP values")
@@ -159,10 +188,10 @@ def printORP():
     plt.show()
 
 def printTDS():
-    ys = [0,0,0,15,30,45,60,75,90,105,120]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     measurments = []
      
-    with open('distilled_water_model_absolute.json') as f:
+    with open('5_min_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -172,7 +201,7 @@ def printTDS():
         
     
     plt.figure(1)
-    plt.plot( ys, measurments[0:-1], '--', label='TDS')
+    plt.plot( ys, measurments, '--', label='TDS')
     
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.title("Average TDS values")
@@ -184,10 +213,10 @@ def printTDS():
     plt.show()
 
 def printTurp():
-    ys = [0,0,0,15,30,45,60,75,90,105,120]
+    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
     measurments = []
      
-    with open('distilled_water_model_absolute.json') as f:
+    with open('5_min_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -197,7 +226,7 @@ def printTurp():
         
     
     plt.figure(1)
-    plt.plot( ys, measurments[0:-1], '--', label='Turb')
+    plt.plot( ys, measurments, '--', label='Turb')
     
     plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
     plt.title("Average Turbidity values")
