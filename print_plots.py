@@ -12,7 +12,8 @@ import sklearn.manifold
 import sklearn.metrics as metrics
 import matplotlib
 import numpy as np
-import random
+from matplotlib import colors
+
 
 
 def random_color():
@@ -22,7 +23,7 @@ def plot_all_clusters():
     model_df = formatModels.formatModel()
     X = model_df.drop(['Desc','Timestamp','Contaminated'], axis=1).values
     y = model_df['Contaminated']
-    
+    x
     euclidean_dists = metrics.euclidean_distances(X)
     mds = sklearn.manifold.MDS(n_components=2, max_iter=3000, eps=1e-9, random_state=0,
                    dissimilarity="precomputed", n_jobs=1)
@@ -32,8 +33,10 @@ def plot_all_clusters():
     #colors = matplotlib.cm.rainbow(np.linspace(0, 1, len(X)))
     colors = [random_color() for _ in range(0, len(X) // 50)] #amount of data points dev by size of clusters
     color_idx = 0;
+    #markers = ["." , "," , "o" , "v" , "^" , "<", ">"]
+    colors = ['r','g','b','c','m', 'y', 'k', 'b', 'w', 'd', 'g' , 'f']
     for idx in range(0, len(X) - 50, 50):
-        _ = plt.scatter(pos[:, 0][idx], pos[:, 1], s=8, edgecolor='k',  marker='o', color = colors[color_idx])
+        _ = plt.scatter(pos[:, 0][idx: idx+50], pos[:, 1][idx : idx+50], s=8, edgecolor='k',  marker='o', color = colors[color_idx])
         color_idx += 1
     
     #A = plt.scatter(pos[:, 0], pos[:, 1], s=8, edgecolor='k',  marker='o', color = colors[0])

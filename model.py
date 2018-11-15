@@ -223,4 +223,49 @@ def main():
         
         pprint("Done!")
 
-main()
+def addToModel(modelName, dataset = None):
+    
+        if(dataset == None):
+            data = openLatestOutput()
+        else:
+            #string so conver to dict object 
+            data = json.loads(dataset) 
+            
+        absolute = data[list(data.keys())[0]]
+        center_point_absolute = centerPoint(absolute)
+        closest_point_absolute = closestPoint(absolute)
+        standards_absolute = standard_dev_cluster(absolute, center_point_absolute)
+        ##for our absolute samples
+        final_obj = {}
+        final_obj = {
+                    "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
+                    "desc" : '/W lead',
+                    "contaminated" : 1,
+                    "results" : data[list(data.keys())[0]],
+                    "closest_point" : closest_point_absolute,
+                    "center_point"  : center_point_absolute,
+                    'standard_deviation': standards_absolute
+                }
+        addToModel(final_obj, modelName + "_absolute.json")
+        normalized_data = normalizeDataSet(data[list(data.keys())[0]])
+        
+        
+        center_point = centerPoint(normalized_data)
+        closest_point = closestPoint(normalized_data)
+        standards = standard_dev_cluster(normalized_data, center_point)
+     
+        final_obj = {}
+        final_obj = {
+                    "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
+                    "desc" : '/W lead',
+                    "contaminated" : 1,
+                    "results" : data[list(data.keys())[0]],
+                    "closest_point" : closest_point,
+                    "center_point"  : center_point,
+                    'standard_deviation': standards
+                }
+        addToModel(final_obj, modelName + "_norm.json")
+        
+        pprint("Done!")
+
+#main()
