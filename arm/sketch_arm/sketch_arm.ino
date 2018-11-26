@@ -20,7 +20,7 @@ void setup()
   claw_p = 50;
   updown_p = 20; //up down, 0 is up
   extend_p = 70; // 90 is retracted in, 10 is extended out
-  base_p = 0;//initialization values
+  base_p = 315;//initialization values
   //20 to 80 is our range for right_p AKA updown
 
   claw.write(claw_p);

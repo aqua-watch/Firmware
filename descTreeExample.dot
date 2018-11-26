@@ -1,8 +1,0 @@
-digraph Tree {
-node [shape=box, style="filled", color="black"] ;
-0 [label="Turb <= 173.71\nsamples = 402\nvalue = [134, 268]\nclass = Uncontaminated", fillcolor="#399de57f"] ;
-1 [label="samples = 268\nvalue = [0, 268]\nclass = Uncontaminated", fillcolor="#399de5ff"] ;
-0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
-2 [label="samples = 134\nvalue = [134, 0]\nclass = Contaminated", fillcolor="#e58139ff"] ;
-0 -> 2 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
-}
