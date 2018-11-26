@@ -8,19 +8,19 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
 
 <div class="container">
   <h2>Aqua Watch </h2>
-  <p>To make the tabs toggleable, add the data-toggle="tab" attribute to each link. Then add a .tab-pane class with a unique ID for every tab and wrap them inside a div element with class .tab-content.</p>
+  <p></p>
 
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">Current Normalized Values</a></li>
     <li><a data-toggle="tab" href="#menu1">Current Normalized Values</a></li>
-    <li><a data-toggle="tab" href="#menu2">Plots</a></li>
-    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+    <li><a data-toggle="tab" href="#menu2">Normalized Plots</a></li>
+    <li><a data-toggle="tab" href="#menu3">Absolute Plots</a></li>
   </ul>
 
   <div class="tab-content">
@@ -39,7 +39,11 @@
     </div>
     <div id="menu3" class="tab-pane fade">
       <h3>Absolute Plots</h3>
-      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+      <div id="abs_Cond"></div>
+      <div id="abs_Ph"></div>
+      <div id="abs_Orp"></div>
+      <div id="abs_Tds"></div>
+      <div id="abs_Turb"></div>
     </div>
   </div>
 </div>
@@ -48,6 +52,103 @@
 
 <script>
 	$(document).ready(function(){
+		let times = {{times|safe}};
+		let norm_ph={{norm_ph|safe}};
+		let norm_cond={{norm_cond|safe}};
+		let norm_orp={{norm_orp|safe}};
+		let norm_tds={{norm_tds|safe}};
+		let norm_turp={{norm_turp|safe}};
+
+		let norm_ph_std={{norm_ph_std|safe}};
+		let norm_cond_std={{norm_cond_std|safe}};
+		let norm_orp_std={{norm_orp_std|safe}};
+		let norm_tds_std={{norm_tds_std|safe}};
+		let norm_turp_std={{norm_turp_std|safe}};		
+
+		function display_center_norm(){
+			var Ph = {
+			  x: times,
+			  y: norm_ph,
+			  name: "Ph",
+			  mode: 'lines'
+			};
+			var Conductivity = {
+			  x: times,
+			  y: norm_cond,
+			  name: "Conductivity",
+			  mode: 'lines'
+			};
+			var ORP = {
+			  x: times,
+			  y: norm_orp,
+			  name: "ORP",
+			  mode: 'lines'
+			};
+			var TDS = {
+			  x: times,
+			  y: norm_tds,
+			  name: "TDS",
+			  mode: 'lines'
+			};
+			var Turbidity = {
+			  x: times,
+			  y: norm_turp,
+			  name: "Turbidity",
+			  mode: 'lines'
+			};
+
+			var data = [ Ph, Conductivity, ORP, TDS, Turbidity ];
+
+			var layout = {
+			  title:'Average Normalized values'
+			};
+
+			Plotly.newPlot('norm_avg', data, layout);
+		}
+
+		function display_std_norm(){
+			var Ph = {
+			  x: times,
+			  y: norm_ph_std,
+			  name: "Ph",
+			  mode: 'lines'
+			};
+			var Conductivity = {
+			  x: times,
+			  y: norm_cond_std,
+			  name: "Conductivity",
+			  mode: 'lines'
+			};
+			var ORP = {
+			  x: times,
+			  y: norm_orp_std,
+			  name: "ORP",
+			  mode: 'lines'
+			};
+			var TDS = {
+			  x: times,
+			  y: norm_tds_std,
+			  name: "TDS",
+			  mode: 'lines'
+			};
+			var Turbidity = {
+			  x: times,
+			  y: norm_turp_std,
+			  name: "Turbidity",
+			  mode: 'lines'
+			};
+
+			var data = [ Ph, Conductivity, ORP, TDS, Turbidity ];
+
+			var layout = {
+			  title:'Standardized Normalized values'
+			};
+
+			Plotly.newPlot('norm_std', data, layout);
+		}
+
+		display_center_norm();
+		display_std_norm();
 
 	});
 

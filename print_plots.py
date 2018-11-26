@@ -23,7 +23,7 @@ def plot_all_clusters():
     model_df = formatModels.formatModel()
     X = model_df.drop(['Desc','Timestamp','Contaminated'], axis=1).values
     y = model_df['Contaminated']
-    x
+    
     euclidean_dists = metrics.euclidean_distances(X)
     mds = sklearn.manifold.MDS(n_components=2, max_iter=3000, eps=1e-9, random_state=0,
                    dissimilarity="precomputed", n_jobs=1)

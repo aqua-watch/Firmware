@@ -40,6 +40,15 @@ def formatModel():
     
     return model_df
 
+def get_normalized_values_json():
+    #take our json object and convert to tabular format
+    model = {}  
+    with open('../../Models/distilled_water_model_norm.json') as f:
+        model = f.read().replace('\n', '')
+        model = json.loads(model)
+        
+    return model
+
 def get_normalized_values():
     cwd = os.getcwd()
     print(cwd)
@@ -74,6 +83,15 @@ def get_normalized_values():
             
     
     return model_df
+
+def get_absolute_values_json():
+    #take our json object and convert to tabular format
+    model = {}  
+    with open('../../Models/distilled_water_model_absolute.json') as f:
+        model = f.read().replace('\n', '')
+        model = json.loads(model)
+        
+    return model
 
 def get_absolute_values():
     #take our json object and convert to tabular format
