@@ -45,7 +45,13 @@ def display_content():
     norm_orp_std = []
     norm_tds_std = []
     norm_turp_std = []
-
+    
+    abs_ph = []
+    abs_cond = []
+    abs_orp = []
+    abs_tds = []
+    abs_turp = []
+    
     exps = norm_json["Exps"]
     
     for exp in exps:
@@ -61,6 +67,17 @@ def display_content():
             norm_orp_std.append(exp["standard_deviation"]["ORP"])
             norm_tds_std.append(exp["standard_deviation"]["TDS"])
             norm_turp_std.append(exp["standard_deviation"]["Turp"])  
+            
+    exps = abs_json["Exps"]
+    for exp in exps:
+        if(exp["contaminated"] == 1): 
+            abs_ph.append(exp["center_point"]["PH"])
+            abs_cond.append(exp["center_point"]["Conductivity"])
+            abs_orp.append(exp["center_point"]["ORP"])
+            abs_tds.append(exp["center_point"]["TDS"])
+            abs_turp.append(exp["center_point"]["Turp"])    
+    
+    
     
     norm_html = Markup(norm_df.to_html())
     absolute_html = Markup(absolute_df.to_html())
@@ -79,8 +96,16 @@ def display_content():
                            norm_orp_std=norm_orp_std,
                            norm_tds_std=norm_tds_std,
                            norm_turp_std=norm_turp_std,
+                           abs_ph=abs_ph,
+                           abs_cond=abs_cond,
+                           abs_orp=abs_orp,
+                           abs_tds=abs_tds,
+                           abs_turp=abs_turp,
                            ) 
     
+if __name__ == '__main__':
+    #app.debug = True
+    app.run(host= '0.0.0.0')
     
     
     

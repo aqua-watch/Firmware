@@ -11,7 +11,7 @@ import os, sys
 def formatModel():
     #take our json object and convert to tabular format
     model = {}  
-    with open('./Models/distilled_water_model_absolute.json') as f:
+    with open('../Models/distilled_water_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
     model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  

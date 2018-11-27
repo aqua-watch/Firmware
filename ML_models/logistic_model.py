@@ -11,8 +11,11 @@ from sklearn.datasets.samples_generator import make_blobs
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
-import formatModels
+
 from getTestingSet import createTestingSet
+
+sys.path.insert(0, '../')
+import formatModels
 
 def build_model(model_df):
     #split data

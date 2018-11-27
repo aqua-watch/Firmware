@@ -11,14 +11,24 @@ import math
 import collections
 import datetime
 
+from getTestingSet import createTestingSet
+import sys
+sys.path.insert(0, '../')
+import formatModels
 
-def queryPoint(query, model = None):
-    if(model == None):
+
+def queryPoint(query, model_name = None):
+    if(model_name == None):
         model = {}
         with open('model.json') as f:
             model = f.read().replace('\n', '')
             model = json.loads(model)
         #left todo
+    else: 
+        model = {}
+        with open(model_name) as f:
+            model = f.read().replace('\n', '')
+            model = json.loads(model)
     
     dists = {}
     for exp in model["Exps"]:    
@@ -45,9 +55,9 @@ def queryPoint(query, model = None):
         rsum += v
     print(rsum, float(idx))
     if rsum >= .45:
-        return 0 
+        return 0 #false
     else:
-        return 1
+        return 1 #true
     
 
 def standard_dev_cluster(data_set, center_point, dims = 5):
@@ -128,31 +138,19 @@ def addToModel(add, fileName = None):
             json.dump(model, f)
 
 def testAccuracy():
-    #load the model first
-    model = {}
-    with open('model.json') as f:
-        model = f.read().replace('\n', '')
-        model = json.loads(model)
-
+    testingModel = createTestingSet()
+    total = len(testingModel)
+    correct = 0
+    incorrect = 0
     
-    queries_no_lead = model["Exps"][0]["results"][10:40]
-    queries_w_lead = model["Exps"][2]["results"][10:40]
-   
-    correct_no_lead = correct_w_lead = 0
-    for query in queries_no_lead:
-        res = queryPoint(query)
-        if(res == 0): #expecting false
-            correct_no_lead += 1
-    for query in queries_w_lead:
-        res = queryPoint(query)
-        if(res == 1): #expecting true
-            correct_w_lead += 1
-    
-    print("Amount of correct w lead: " , correct_w_lead)
-    print("Amount of correct no lead: " , correct_no_lead)
-    accuracy_w_cont = correct_w_lead / len(queries_w_lead)
-    accuracy_no_cont = correct_no_lead / len(queries_no_lead)
-    print("Accuracy with contaminant: " + str(accuracy_w_cont) + "\n With out contaminant: " + str(accuracy_no_cont))
+    for exp in testingModel:
+        res = queryPoint([list(exp["value"].values())])
+        if(res == 1 and exp["contaminated"] == 1 or res == 0 and exp["contaminated"] == 0):
+            correct += 1
+        else:
+            incorrect += 1
+            
+    print("Accuracy on mixed testing set: ({0:.6f}) ".format(correct / total))
 
 def openLatestOutput():
     with open('log_putty_output.txt') as f:

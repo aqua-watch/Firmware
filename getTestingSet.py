@@ -10,7 +10,7 @@ import json
 def createTestingSet():
     testing_set = []
     model = {}
-    with open('Models/distilled_water_model_absolute.json') as f:
+    with open('../Models/distilled_water_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)   
         
@@ -31,7 +31,7 @@ def createTestingSet():
                 
     
     model = {}
-    with open('Models/tap_water_absolute.json') as f:
+    with open('../Models/tap_water_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model) 
     for exp in model["Exps"]:

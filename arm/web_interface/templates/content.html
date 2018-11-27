@@ -39,8 +39,8 @@
     </div>
     <div id="menu3" class="tab-pane fade">
       <h3>Absolute Plots</h3>
-      <div id="abs_Cond"></div>
       <div id="abs_Ph"></div>
+      <div id="abs_Cond"></div>
       <div id="abs_Orp"></div>
       <div id="abs_Tds"></div>
       <div id="abs_Turb"></div>
@@ -52,6 +52,10 @@
 
 <script>
 	$(document).ready(function(){
+		//Add the class to pandas tables
+		$("table").addClass("table"); 
+		$("table").addClass("table-striped");
+
 		let times = {{times|safe}};
 		let norm_ph={{norm_ph|safe}};
 		let norm_cond={{norm_cond|safe}};
@@ -63,7 +67,13 @@
 		let norm_cond_std={{norm_cond_std|safe}};
 		let norm_orp_std={{norm_orp_std|safe}};
 		let norm_tds_std={{norm_tds_std|safe}};
-		let norm_turp_std={{norm_turp_std|safe}};		
+		let norm_turp_std={{norm_turp_std|safe}};	
+
+		let abs_ph={{abs_ph|safe}};
+		let abs_cond={{abs_cond|safe}};
+		let abs_orp={{abs_orp|safe}};
+		let abs_tds={{abs_tds|safe}};
+		let abs_turp={{abs_turp|safe}};		
 
 		function display_center_norm(){
 			var Ph = {
@@ -147,8 +157,68 @@
 			Plotly.newPlot('norm_std', data, layout);
 		}
 
+		function display_abs(){
+			var Ph = {
+			  x: times,
+			  y: abs_ph,
+			  name: "Ph",
+			  mode: 'lines'
+			};
+			var layout = {
+			  title:'Absolute pH'
+			};
+			Plotly.newPlot('abs_Ph', [Ph], layout);
+
+			var cond = {
+			  x: times,
+			  y: abs_cond,
+			  name: "Conductivity",
+			  mode: 'lines'
+			};
+			 layout = {
+			  title:'Absolute Conductivity'
+			};
+			Plotly.newPlot('abs_Cond', [cond], layout);
+
+			var orp = {
+			  x: times,
+			  y: abs_orp,
+			  name: "ORP",
+			  mode: 'lines'
+			};
+			layout = {
+			  title:'Absolute ORP'
+			};
+			Plotly.newPlot('abs_Orp', [orp], layout);
+
+			var tds = {
+			  x: times,
+			  y: abs_tds,
+			  name: "TDS",
+			  mode: 'lines'
+			};
+			layout = {
+			  title:'Absolute TDS'
+			};
+			Plotly.newPlot('abs_Tds', [tds], layout);
+
+			var turb = {
+			  x: times,
+			  y: abs_turp,
+			  name: "turp",
+			  mode: 'lines'
+			};
+			layout = {
+			  title:'Absolute Turbidity'
+			};
+			Plotly.newPlot('abs_Turb', [turb], layout);
+
+
+		}
+
 		display_center_norm();
 		display_std_norm();
+		display_abs();
 
 	});
 
