@@ -33,6 +33,7 @@ void setup()
  
 void loop() 
 { 
+  // Serial.println("1"); //this line needs to be printed when GPIO connection is made
   base.write(base_p);
     
   if(base_p == 0 && updown_p == 20){ //in position zero
@@ -42,6 +43,7 @@ void loop()
       updown.write(updown_p); //go down to 80
       delay(35);
     }
+    Serial.println(0);
     delay(2000);
     while(updown_p > 20 ){ //move claw back up
       updown_p-=1;
@@ -56,7 +58,8 @@ void loop()
         updown_p+=1;
         updown.write(updown_p); //go down to 80
         delay(35);
-      } 
+      }
+      Serial.println(1); 
       delay(2000);
       while(updown_p > 20 ){ //move claw back up
         updown_p-=1;
