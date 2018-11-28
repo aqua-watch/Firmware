@@ -1,11 +1,9 @@
 
 //#include <iostream.h>
-#include "ArduinoJson.h"
+
 #include <EEPROM.h>
 #include "GravityTDS.h"
 #include <OneWire.h>
-#include <ArduinoHttpClient.h>
-#include <WiFi101.h>
 
 #define VOLTAGE 5.00    //system voltage
 #define OFFSET 0        //zero drift voltage
