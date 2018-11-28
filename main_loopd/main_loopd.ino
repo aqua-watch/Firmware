@@ -87,7 +87,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   print_sample();
   delay(15000);
-  return;
+ 
 }
 
 void print_sample(){

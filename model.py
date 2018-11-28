@@ -221,12 +221,13 @@ def main():
         
         pprint("Done!")
 
-def addToModel(modelName, dataset = None):
+def insert_model(modelName, dataset = None):
     
         if(dataset == None):
             data = openLatestOutput()
         else:
             #string so conver to dict object 
+            print("I GOT THIS DATA: " + dataset)
             data = json.loads(dataset) 
             
         absolute = data[list(data.keys())[0]]
@@ -236,15 +237,15 @@ def addToModel(modelName, dataset = None):
         ##for our absolute samples
         final_obj = {}
         final_obj = {
-                    "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : '/W lead',
+                    "timeStamp": datetime.datetime.now(),
+                    "desc" : '',
                     "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
                     'standard_deviation': standards_absolute
                 }
-        addToModel(final_obj, modelName + "_absolute.json")
+        addToModel(final_obj, "Models/" + modelName + "_absolute.json")
         normalized_data = normalizeDataSet(data[list(data.keys())[0]])
         
         
@@ -254,15 +255,15 @@ def addToModel(modelName, dataset = None):
      
         final_obj = {}
         final_obj = {
-                    "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : '/W lead',
+                    "timeStamp": datetime.datetime.now(),
+                    "desc" : '',
                     "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, modelName + "_norm.json")
+        addToModel(final_obj, "Models/" + modelName + "_norm.json")
         
         pprint("Done!")
 
