@@ -11,8 +11,8 @@ import time
 """ Two portions we need to listen to the arm (OPRPA) and we need to ignore or add to the model """
 
 def main():
-	arm_port = '/dev/ttyl' # temp
-	aqua_watch_port = '/dev/ttyl' #temp
+	arm_port = '/dev/ttyUSB0' # temp
+	aqua_watch_port = '/dev/ttyACM0' #temp
 
 	arm_serial = serial.Serial(arm_port, 9600)
 	aqua_watch_serial = serial.Serial(aqua_watch_port, 9600)

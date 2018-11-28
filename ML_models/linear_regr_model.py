@@ -32,8 +32,6 @@ def build_model(model_df):
      #                     multi_class='multinomial').fit(X_train, y_train)
     clf = LinearRegression().fit(X_train, y_train)
     
-    print("Accuracy on training dataset: ({0:.6f}) ".format( clf.score(X_train , y_train)))
-    print("Accuracy on testing dataset: ({0:.6f}) ".format( clf.score(X_test , y_test)))
     
     # The coefficients
     print('Coefficients: \n', clf.coef_)
