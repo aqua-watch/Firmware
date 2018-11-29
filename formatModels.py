@@ -11,7 +11,7 @@ import os, sys
 def formatModel():
     #take our json object and convert to tabular format
     model = {}  
-    with open('../Models/distilled_water_model_absolute.json') as f:
+    with open('../Models/test_arm_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
     model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  
@@ -43,12 +43,12 @@ def formatModel():
 def formatModel_extra_dims():
     #take our json object and convert to tabular format
     model = {}  
-    with open('Models/distilled_water_model_absolute.json') as f:
+    with open('Models/test_arm_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
     model_norm = {}  
-    with open('Models/distilled_water_model_norm.json') as f:
+    with open('Models/test_arm_norm.json') as f:
         model_norm = f.read().replace('\n', '')
         model_norm = json.loads(model_norm)
         
@@ -99,7 +99,7 @@ def formatModel_extra_dims():
 def get_normalized_values_json():
     #take our json object and convert to tabular format
     model = {}  
-    with open('../../Models/distilled_water_model_norm.json') as f:
+    with open('../../Models/test_arm_norm.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -110,7 +110,7 @@ def get_normalized_values():
     print(cwd)
     #take our json object and convert to tabular format
     model = {}  
-    with open('../../Models/distilled_water_model_norm.json') as f:
+    with open('../../Models/test_arm_norm.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -143,7 +143,7 @@ def get_normalized_values():
 def get_absolute_values_json():
     #take our json object and convert to tabular format
     model = {}  
-    with open('../../Models/distilled_water_model_absolute.json') as f:
+    with open('../../Models/test_arm_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -152,7 +152,7 @@ def get_absolute_values_json():
 def get_absolute_values():
     #take our json object and convert to tabular format
     model = {}  
-    with open('../../Models/distilled_water_model_absolute.json') as f:
+    with open('../../Models/test_arm_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
     model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  

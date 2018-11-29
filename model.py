@@ -237,7 +237,7 @@ def insert_model(modelName, dataset = None):
         ##for our absolute samples
         final_obj = {}
         final_obj = {
-                    "timeStamp": datetime.datetime.now(),
+                    "timeStamp": str(datetime.datetime.now()),
                     "desc" : '',
                     "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
@@ -255,7 +255,7 @@ def insert_model(modelName, dataset = None):
      
         final_obj = {}
         final_obj = {
-                    "timeStamp": datetime.datetime.now(),
+                    "timeStamp": str(datetime.datetime.now()),
                     "desc" : '',
                     "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],

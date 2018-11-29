@@ -14,23 +14,48 @@ import json
 
 def main():
 	aqua_watch_port = '/dev/ttyACM0' 
-	arm_port = '/dev/ttyUSB1' 
+	arm_port = '/dev/ttyUSB0' 
 
 	arm_serial = Serial(arm_port, 9600)
 	aqua_watch_serial = Serial(aqua_watch_port, 9600)
-
+	TIME_BEFORE_CHECK = 15
 
 	while True:  
 	    print("reading") 
 	    gpio_status = arm_serial.readline()
-	    print(gpio_status)
+	    print("GPIO status: " + gpio_status)
+	    try:
+	    	temp = int(gpio_status)
+
+	    except:
+	    	time.sleep(TIME_BEFORE_CHECK)
+	    	continue
+
+
+
 	    if(int(gpio_status) == 1): #ready for sampling
 	    	print("ready to read from aquawatch")
 	    	while(True):
 	    		current_data_set = aqua_watch_serial.readline()
 	    		try:
-	    			json.loads(current_data_set)
-	    		except:
+	    			testable_dataset = json.loads(current_data_set)
+	    			continue_flag = False
+	    			for k, v in testable_dataset.items():
+	    				if(not type(v) == list or len(v) < 49):
+	    					print("Malformed data: " + v)
+	    					continue_flag = True
+	    					break
+	    				else:
+	    					for val in v:
+	    						if(not type(val) == dict or len(val) < 5):
+	    							print("Malformed data: " + val)
+	    							continue_flag = True
+	    							break
+	    			if(continue_flag):
+	    				continue_flag = False
+	    				continue
+
+	    		except:	
 	    			continue
 	    			
 	    		break 
@@ -42,7 +67,7 @@ def main():
 
 	    # print str("GPIO Status")
 	    print("DONE")
-	    time.sleep(15)
+	    time.sleep(TIME_BEFORE_CHECK) #
 
 	
 
