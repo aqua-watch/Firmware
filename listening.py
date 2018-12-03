@@ -13,7 +13,7 @@ import json
 """ Two portions we need to listen to the arm (OPRPA) and we need to ignore or add to the model """
 
 def main():
-	aqua_watch_port = '/dev/ttyACM0' 
+	aqua_watch_port = '/dev/ttyACM1' 
 	arm_port = '/dev/ttyUSB0' 
 
 	arm_serial = Serial(arm_port, 9600)
@@ -26,7 +26,6 @@ def main():
 	    print("GPIO status: " + gpio_status)
 	    try:
 	    	temp = int(gpio_status)
-
 	    except:
 	    	time.sleep(TIME_BEFORE_CHECK)
 	    	continue
