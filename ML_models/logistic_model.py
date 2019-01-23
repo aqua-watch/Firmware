@@ -11,10 +11,12 @@ from sklearn.datasets.samples_generator import make_blobs
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
+import sys
 
-from getTestingSet import createTestingSet
+
 
 sys.path.insert(0, '../')
+from getTestingSet import createTestingSet
 import formatModels
 
 def build_model(model_df):
@@ -34,6 +36,7 @@ def build_model(model_df):
     print("Accuracy on testing dataset: ({0:.6f}) ".format( clf.score(X_test , y_test)))
     
     testingModel = createTestingSet()
+    
     total = len(testingModel)
     correct = 0
     incorrect = 0

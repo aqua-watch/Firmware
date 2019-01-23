@@ -10,13 +10,13 @@ import json
 def createTestingSet():
     testing_set = []
     model = {}
-    with open('../Models/distilled_water_model_absolute.json') as f:
+    with open('Models/distilled_water_model_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)   
         
     un_cont_counter = 0
     cont_counter = 0
-    
+        
     for exp in model["Exps"]:
         if(exp["contaminated"] == 0 and un_cont_counter < 3):
             un_cont_counter += 1
@@ -31,7 +31,7 @@ def createTestingSet():
                 
     
     model = {}
-    with open('../Models/tap_water_absolute.json') as f:
+    with open('Models/tap_water_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model) 
     for exp in model["Exps"]:

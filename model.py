@@ -54,7 +54,7 @@ def queryPoint(query, model_name = None):
         idx += 1
         rsum += v
     print(rsum, float(idx))
-    if rsum >= .45:
+    if rsum >= .7:
         return 0 #false
     else:
         return 1 #true
@@ -142,9 +142,11 @@ def testAccuracy():
     total = len(testingModel)
     correct = 0
     incorrect = 0
-    
+    model = 'Models/distilled_water_model_absolute.json'
     for exp in testingModel:
-        res = queryPoint([list(exp["value"].values())])
+        query_point = exp["value"]
+        print( exp["contaminated"])
+        res = queryPoint(query_point, model )
         if(res == 1 and exp["contaminated"] == 1 or res == 0 and exp["contaminated"] == 0):
             correct += 1
         else:
@@ -157,6 +159,7 @@ def openLatestOutput():
         try:
             data = f.read().replace('\n', '').split("~=\"Con")[1]
         except:
+            
             data = '{" 9/20/2018 ":[{"Conductivity":1.54, "PH":4.02, "ORP":242.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":369.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.00, "ORP":266.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":330.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":286.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.14, "ORP":330.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":300.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":320.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.07, "ORP":291.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":378.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":256.00, "TDS":173.72, "Turp": 549.43},{"Conductivity":1.57, "PH":4.17, "ORP":369.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.02, "ORP":247.00, "TDS":173.72, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":393.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.02, "ORP":300.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":310.00, "TDS":173.72, "Turp": 533.21},{"Conductivity":1.57, "PH":4.05, "ORP":305.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":310.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.07, "ORP":300.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":305.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.07, "ORP":325.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":359.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.05, "ORP":242.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.17, "ORP":364.00, "TDS":173.72, "Turp": 533.21},{"Conductivity":1.57, "PH":4.02, "ORP":247.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":403.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":261.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":320.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.02, "ORP":305.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.15, "ORP":339.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.60, "PH":4.07, "ORP":291.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":344.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":305.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":344.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":247.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":374.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.05, "ORP":247.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.17, "ORP":383.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.02, "ORP":251.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":383.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":256.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.14, "ORP":325.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.08, "ORP":295.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.08, "ORP":334.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":295.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.54, "PH":4.02, "ORP":334.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":291.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.02, "ORP":173.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.14, "ORP":242.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":374.00, "TDS":169.97, "Turp": 533.21}]}'
                 
         return json.loads(data) 
