@@ -10,6 +10,7 @@ import numpy as np
 import math
 import collections
 import datetime
+import serial
 
 from getTestingSet import createTestingSet
 import sys
@@ -159,11 +160,22 @@ def openLatestOutput():
         try:
             data = f.read().replace('\n', '').split("~=\"Con")[1]
         except:
-            
-            data = '{" 9/20/2018 ":[{"Conductivity":1.54, "PH":4.02, "ORP":242.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":369.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.00, "ORP":266.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":330.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":286.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.14, "ORP":330.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":300.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":320.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.07, "ORP":291.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":378.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":256.00, "TDS":173.72, "Turp": 549.43},{"Conductivity":1.57, "PH":4.17, "ORP":369.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.02, "ORP":247.00, "TDS":173.72, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":393.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.02, "ORP":300.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":310.00, "TDS":173.72, "Turp": 533.21},{"Conductivity":1.57, "PH":4.05, "ORP":305.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":310.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.07, "ORP":300.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":305.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.07, "ORP":325.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":359.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.05, "ORP":242.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.17, "ORP":364.00, "TDS":173.72, "Turp": 533.21},{"Conductivity":1.57, "PH":4.02, "ORP":247.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":403.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":261.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":320.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.02, "ORP":305.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.15, "ORP":339.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.60, "PH":4.07, "ORP":291.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.57, "PH":4.10, "ORP":344.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":305.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":344.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.07, "ORP":247.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.12, "ORP":374.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.05, "ORP":247.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.17, "ORP":383.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.02, "ORP":251.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.17, "ORP":383.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":256.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.54, "PH":4.14, "ORP":325.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.08, "ORP":295.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.08, "ORP":334.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":295.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.54, "PH":4.02, "ORP":334.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.15, "ORP":291.00, "TDS":169.97, "Turp": 549.43},{"Conductivity":1.60, "PH":4.02, "ORP":173.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.14, "ORP":242.00, "TDS":169.97, "Turp": 533.21},{"Conductivity":1.57, "PH":4.03, "ORP":374.00, "TDS":169.97, "Turp": 533.21}]}'
+            data = ''
                 
         return json.loads(data) 
         
+def readFromSerialPort():
+    ser = serial.Serial(
+            port='\\.\COM4',\
+            baudrate=9600
+    )
+
+    print("connected to: " + ser.portstr)
+    data = str(ser.readline(), 'utf-8').replace('\r\n','')
+        
+    ser.close()
+    return json.loads(data) 
+    
 def normalizeDataSet(dataSet):
     cp_data  = dataSet
     
@@ -180,7 +192,8 @@ def main():
     print("Your actions are 0 for loading latest data set from output file and adding to model \n or 1 for querying a data point from the output file")
     action = int(input())
     if(action == 0):
-        data = openLatestOutput()
+        #data = openLatestOutput()
+        data = readFromSerialPort()
         absolute = data[list(data.keys())[0]]
         center_point_absolute = centerPoint(absolute)
         closest_point_absolute = closestPoint(absolute)
@@ -189,16 +202,15 @@ def main():
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : '/W lead',
-                    "contaminated" : 1,
+                    "desc" : 'No lead',
+                    "contaminated" : 0,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
                     'standard_deviation': standards_absolute
                 }
-        addToModel(final_obj, "5_min_model_absolute.json")
+        addToModel(final_obj, "Models/ChemDptSamples/0.3pb_absolute.json")
         normalized_data = normalizeDataSet(data[list(data.keys())[0]])
-        
         
         center_point = centerPoint(normalized_data)
         closest_point = closestPoint(normalized_data)
@@ -207,14 +219,14 @@ def main():
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : '/W lead',
-                    "contaminated" : 1,
+                    "desc" : 'No lead',
+                    "contaminated" : 0,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, "5_min_model_norm.json")
+        addToModel(final_obj, "Models/ChemDptSamples/0.3pb_norm.json")
         
         pprint("Done!")
     elif(action == 1):
@@ -230,7 +242,6 @@ def insert_model(modelName, dataset = None):
             data = openLatestOutput()
         else:
             #string so conver to dict object 
-            print("I GOT THIS DATA: " + dataset)
             data = json.loads(dataset) 
             
         absolute = data[list(data.keys())[0]]
@@ -270,4 +281,4 @@ def insert_model(modelName, dataset = None):
         
         pprint("Done!")
 
-#main()
+main()
