@@ -51,10 +51,7 @@ OneWire ds(DS18B20_Pin);  // on digital pin 2
 void setup() {
 
   Serial.begin(9600);
-
-  //ORP SET UP
-  pinMode(LED, OUTPUT);
-
+  
   //TDS SET UP
   gravityTds.setPin(TdsSensorPin);
   gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
@@ -83,7 +80,7 @@ void setup() {
     } else {
       response += getSample() + ",";
     }
-    //delay(150);
+    delay(150);
   }
   response += "]}";
   Serial.println(response);
