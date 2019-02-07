@@ -42,7 +42,7 @@ def plot_all_clusters():
     #A = plt.scatter(pos[:, 0], pos[:, 1], s=8, edgecolor='k',  marker='o', color = colors[0])
 
 def center_plot():
-    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
+    ys = [1,2,3,4]
     ph = []
     cond = []
     orp = []
@@ -50,7 +50,7 @@ def center_plot():
     turp = []
     
     model = {}  
-    with open('5_min_model_norm.json') as f:
+    with open('Models/ChemDptSamples/0.03pb_norm.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
     exps = model["Exps"]
@@ -88,7 +88,7 @@ def standard_deviation_plot():
     tds = []
     turp = []
     model = {}  
-    with open('5_min_model_norm.json') as f:
+    with open('Models/ChemDptSamples/0.03pb_norm.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -116,10 +116,10 @@ def standard_deviation_plot():
     plt.show()
 
 def printPH():
-    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
+    ys = [1,2,3,4]
     ph = []
      
-    with open('5_min_model_absolute.json') as f:
+    with open('Models/ChemDptSamples/20pb_absolute.json') as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
@@ -216,7 +216,7 @@ def printTDS():
     plt.show()
 
 def printTurp():
-    ys = [5,10,15,20,25,30,35,40,45,50,55,60]
+    
     measurments = []
      
     with open('5_min_model_absolute.json') as f:
@@ -239,8 +239,41 @@ def printTurp():
     plt.draw()
     #plt.savefig('imgs/distilled_water_model_norm_stds.png')
     plt.show()
+    
 
+def printMetricAcrossModels(metrics, models):
+    ys = [1,2,3,4]
+    lines = ['--','-',':','--y','--g']
 
+    
+    for metric in metrics:
+        plt.figure(1)
+        
+        for ML_Model in models:
+            idx = 0
+            with open(ML_Model) as f:
+                model = f.read().replace('\n', '')
+                model = json.loads(model)
+                
+            measurments = []
+            exps = model["Exps"]
+            for exp in exps:
+                measurments.append(exp["center_point"][metric])
+            
+            plt.plot( ys, measurments, lines[idx], label=str(ML_Model.split('/')[-1]))
+            idx += 1
+            
+        plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+        plt.title("Average "+metric+" values")
+        plt.ylabel("Absolute sensor measurement")
+        plt.xlabel("Number of samples")
+                
+        plt.draw()
+        plt.show()
+        
+        
+
+"""
 printCond()
 printPH()
 printORP()
@@ -248,3 +281,6 @@ printTDS()
 printTurp()
 standard_deviation_plot()   
 center_plot()
+
+"""
+

@@ -187,7 +187,14 @@ def normalizeDataSet(dataSet):
         
     return cp_data
 
-   
+def normalizeMinMax(dataset):
+   cp_data  = dataSet 
+   for data in cp_data:
+        for k,v in data.items():
+            data[k] = (v - mean) / std
+        
+        return cp_data
+
 def main():
     print("Your actions are 0 for loading latest data set from output file and adding to model \n or 1 for querying a data point from the output file")
     action = int(input())
@@ -202,31 +209,32 @@ def main():
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'No lead',
-                    "contaminated" : 0,
+                    "desc" : 'W/ 0.03 pb lead',
+                    "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
                     'standard_deviation': standards_absolute
                 }
-        addToModel(final_obj, "Models/ChemDptSamples/0.3pb_absolute.json")
+        addToModel(final_obj, "Models/ChemDptSamples/0.03pb_absolute.json")
         normalized_data = normalizeDataSet(data[list(data.keys())[0]])
+        print(data[list(data.keys())[0]])
         
         center_point = centerPoint(normalized_data)
         closest_point = closestPoint(normalized_data)
         standards = standard_dev_cluster(normalized_data, center_point)
-     
+        
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'No lead',
-                    "contaminated" : 0,
+                    "desc" : 'W/ 0.03 pb lead',
+                    "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, "Models/ChemDptSamples/0.3pb_norm.json")
+        addToModel(final_obj, "Models/ChemDptSamples/0.03pb_norm.json")
         
         pprint("Done!")
     elif(action == 1):
