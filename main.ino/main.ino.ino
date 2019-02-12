@@ -107,14 +107,9 @@ String getSample() {
 
 /*Turpidity function*/
 float getTurpidity() {
-  int sensorValue = analogRead(turpPin);// read the input on analog pin 0:
+  int sensorValue = analogRead(A5);// read the input on analog pin 0:
   float voltage = sensorValue * (5.0 / 1024.0); // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 5V):
-  if (voltage < 2.5) {
-    return 3000.0;
-  }
-
-  float fin = (-1120.4 * (voltage * voltage) + 5742.3 * voltage - 4352.9) ;
-  return fin;
+  return voltage;
 }
 
 
@@ -170,8 +165,9 @@ float getConductivity() {
 
   float TempCoefficient = 1.0 + 0.0185 * (temperature - 25.0); //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
   float CoefficientVolatge = (float)averageVoltage / TempCoefficient;
-  if (CoefficientVolatge < 150)Serial.println("No solution!"); //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
-  else if (CoefficientVolatge > 3300)Serial.println("Out of the range!"); //>20ms/cm,out of the range
+//  if (CoefficientVolatge < 150)Serial.println("No solution!"); //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
+//  else 
+  if (CoefficientVolatge > 3300)Serial.println("Out of the range!"); //>20ms/cm,out of the range
   else
   {
     if (CoefficientVolatge <= 448)ECcurrent = 6.84 * CoefficientVolatge - 64.32; //1ms/cm<EC<=3ms/cm

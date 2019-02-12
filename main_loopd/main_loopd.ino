@@ -113,7 +113,6 @@ float getTurpidity() {
   return voltage;
 }
 
-
 /*Conductivity functions*/
 
 float getConductivity() {

@@ -75,7 +75,7 @@ def standard_dev_cluster(data_set, center_point, dims = 5):
         standard_devs[keys[i]] = math.sqrt(rsum / (dims - 1))
     return standard_devs
 
-def centerPoint(data_set, dims = 5):
+def centerPoint(data_set, dims = 6):
     center = [0] * dims
     for i in range(0, dims): #for the i'th dimension
         try:
@@ -209,14 +209,14 @@ def main():
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'W/ 0.03 pb lead',
+                    "desc" : 'W/ 20 ppb lead',
                     "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
                     'standard_deviation': standards_absolute
                 }
-        addToModel(final_obj, "Models/ChemDptSamples/0.03pb_absolute.json")
+        addToModel(final_obj, "Models/ChemDptSamples/20pb_absolute.json")
         normalized_data = normalizeDataSet(data[list(data.keys())[0]])
         print(data[list(data.keys())[0]])
         
@@ -227,14 +227,14 @@ def main():
         final_obj = {}
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'W/ 0.03 pb lead',
+                    "desc" : 'W/ 20 ppb lead',
                     "contaminated" : 1,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, "Models/ChemDptSamples/0.03pb_norm.json")
+        addToModel(final_obj, "Models/ChemDptSamples/20pb_norm.json")
         
         pprint("Done!")
     elif(action == 1):
@@ -260,8 +260,8 @@ def insert_model(modelName, dataset = None):
         final_obj = {}
         final_obj = {
                     "timeStamp": str(datetime.datetime.now()),
-                    "desc" : '',
-                    "contaminated" : 1,
+                    "desc" : 'Tap Water',
+                    "contaminated" : 0,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
@@ -278,8 +278,8 @@ def insert_model(modelName, dataset = None):
         final_obj = {}
         final_obj = {
                     "timeStamp": str(datetime.datetime.now()),
-                    "desc" : '',
-                    "contaminated" : 1,
+                    "desc" : 'Tap Water',
+                    "contaminated" :0,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
