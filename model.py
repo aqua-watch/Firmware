@@ -224,6 +224,7 @@ def main():
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
                     "desc" : 'W/ 20 ppb lead',
                     "contaminated" : 1,
+                    "ppb_amount_contamination":10,
                     "results" : data[list(data.keys())[0]], #array of objects [{ph:,cond:,...},...]
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
@@ -242,6 +243,7 @@ def main():
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
                     "desc" : 'W/ 20 ppb lead',
                     "contaminated" : 1,
+                    "ppb_amount_contamination":10,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
