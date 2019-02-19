@@ -54,7 +54,7 @@ def queryPoint(query, model_name = None):
     for _, v in diff_stand_dev.items():
         idx += 1
         rsum += v
-    print(rsum, float(idx))
+    
     if rsum >= .7:
         return 0 #false
     else:
@@ -135,7 +135,7 @@ def addToModel(add, fileName = None):
         
     with open(fileName, 'w+') as f:
             model['Exps'].append(add)
-            pprint(model)
+            #pprint(model)
             json.dump(model, f)
 
 def testAccuracy():
@@ -176,8 +176,8 @@ def readFromSerialPort():
     ser.close()
     return json.loads(data) 
     
-def normalizeDataSet(dataSet):
-    cp_data  = dataSet
+def normalizeDataSet(data_set):
+    cp_data  = data_set
     
     for data in cp_data:
         mean = sum(data.values()) / len(data.values())
@@ -188,53 +188,86 @@ def normalizeDataSet(dataSet):
     return cp_data
 
 def normalizeMinMax(dataset):
-   cp_data  = dataSet 
-   for data in cp_data:
-        for k,v in data.items():
-            data[k] = (v - mean) / std
-        
-        return cp_data
+    """
+    @param: Array of objects 
+    
+    """
+    cp_data  = dataset.copy()
+    inverted = {}
+    
+    #for each metric compute its min and max
+    for sample in dataset:
+        for metric, v in sample.items():
+            inverted[metric] = [v]
+        break
+    
+    for sample in dataset:
+        for metric, v in sample.items():
+            inverted[metric].append(v)
+    for sample in cp_data:
+        for metric, v in inverted.items():
+           print(v)
+           if max(inverted[metric]) - min(inverted[metric]) == 0: 
+               sample[metric] = (v - min(inverted[metric])) / (max(inverted[metric]) - min(inverted[metric]))
+           else:
+               sample[metric] = 0
+    pprint(cp_data)
+    return cp_data
 
+def create_init_model(model_name):
+    with open(model_name, "w") as f:
+        f.write("{\"Exps\": []}")
+        
 def main():
     print("Your actions are 0 for loading latest data set from output file and adding to model \n or 1 for querying a data point from the output file")
     action = int(input())
     if(action == 0):
+        MODEL_NAME = "Models/ChemDptSamples/20pb_absolute.json";
+        #init Model 
+        create_init_model(MODEL_NAME)
+        
+        
         #data = openLatestOutput()
         data = readFromSerialPort()
+        
         absolute = data[list(data.keys())[0]]
         center_point_absolute = centerPoint(absolute)
         closest_point_absolute = closestPoint(absolute)
         standards_absolute = standard_dev_cluster(absolute, center_point_absolute)
         ##for our absolute samples
-        final_obj = {}
+        
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
                     "desc" : 'W/ 20 ppb lead',
                     "contaminated" : 1,
-                    "results" : data[list(data.keys())[0]],
+                    "ppb_amount_contamination":10,
+                    "results" : data[list(data.keys())[0]], #array of objects [{ph:,cond:,...},...]
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
                     'standard_deviation': standards_absolute
                 }
-        addToModel(final_obj, "Models/ChemDptSamples/20pb_absolute.json")
-        normalized_data = normalizeDataSet(data[list(data.keys())[0]])
-        print(data[list(data.keys())[0]])
+        addToModel(final_obj, MODEL_NAME)
+        normalized_data = normalizeMinMax(data[list(data.keys())[0]])
+        MODEL_NAME = "Models/ChemDptSamples/20pb_norm.json";
+        #init Model 
+        create_init_model(MODEL_NAME)
         
         center_point = centerPoint(normalized_data)
         closest_point = closestPoint(normalized_data)
         standards = standard_dev_cluster(normalized_data, center_point)
         
-        final_obj = {}
+       
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
                     "desc" : 'W/ 20 ppb lead',
                     "contaminated" : 1,
+                    "ppb_amount_contamination":10,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, "Models/ChemDptSamples/20pb_norm.json")
+        addToModel(final_obj, MODEL_NAME)
         
         pprint("Done!")
     elif(action == 1):

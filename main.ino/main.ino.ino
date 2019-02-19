@@ -6,7 +6,7 @@
 #define OFFSET 0        //zero drift voltage
 #define LED 13         //operating instructions
 
-#define TdsSensorPin 0
+#define TdsSensorPin 4
 #define orpPin 1          //orp meter output,connect to Arduino controller ADC pin
 #define SensorPin 3            //pH meter Analog output to Arduino Analog Input 0
 byte ECsensorPin = 2;  //EC Meter analog output,pin on analog 1
@@ -70,17 +70,18 @@ void setup() {
   tempSampleTime = millis();
   //Turpidity SET UP
   //add everything in to json object
-
+  int NUM_SAMPLE = 50;
+  int WAIT_TIME = 5;
   String currDate = "9/20/2018";
   String response = "{\" " + currDate + " \":[";
 
-  for (int i = 0; i < 50; i++) {
-    if (i >= 49) {
+  for (int i = 0; i < NUM_SAMPLE; i++) {
+    if (i >= NUM_SAMPLE - 1) {
       response += getSample();
     } else {
       response += getSample() + ",";
     }
-    delay(150);
+    delay(WAIT_TIME);
   }
   response += "]}";
   Serial.println(response);
@@ -167,8 +168,8 @@ float getConductivity() {
   float CoefficientVolatge = (float)averageVoltage / TempCoefficient;
 //  if (CoefficientVolatge < 150)Serial.println("No solution!"); //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
 //  else 
-  if (CoefficientVolatge > 3300)Serial.println("Out of the range!"); //>20ms/cm,out of the range
-  else
+//  if (CoefficientVolatge > 3300)Serial.println("Out of the range!"); //>20ms/cm,out of the range
+  //else
   {
     if (CoefficientVolatge <= 448)ECcurrent = 6.84 * CoefficientVolatge - 64.32; //1ms/cm<EC<=3ms/cm
     else if (CoefficientVolatge <= 1457)ECcurrent = 6.98 * CoefficientVolatge - 127; //3ms/cm<EC<=10ms/cm

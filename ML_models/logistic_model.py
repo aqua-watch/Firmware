@@ -42,11 +42,14 @@ def build_model(model_df):
     incorrect = 0
     
     for exp in testingModel:
-        res = clf.predict([list(exp["value"].values())])
+        print([list(exp["value"].values())[0:5]])
+        res = clf.predict([list(exp["value"].values())[0:5]]) #0-5 only because we did not train on temp
         if(res == 1 and exp["contaminated"] == 1 or res == 0 and exp["contaminated"] == 0):
             correct += 1
         else:
             incorrect += 1
+            
+    
             
     print("Accuracy on mixed testing set: ({0:.6f}) ".format(correct / total))
     
