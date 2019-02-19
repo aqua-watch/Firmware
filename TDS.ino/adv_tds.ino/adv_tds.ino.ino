@@ -25,7 +25,7 @@
 #include <EEPROM.h>
 #include "GravityTDS.h"
 
-#define TdsSensorPin A0
+#define TdsSensorPin A4
 GravityTDS gravityTds;
 
 float temperature = 25,tdsValue = 0;
