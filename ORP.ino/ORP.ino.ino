@@ -80,8 +80,8 @@ void loop(void) {
   if(millis() >= printTime)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
   {
   printTime=millis()+800;
-  Serial.print("ORP: ");
-  Serial.print((int)orpValue);
+      Serial.print("ORP: ");
+      Serial.print((int)orpValue);
         Serial.println("mV");
         digitalWrite(LED,1-digitalRead(LED));
   }

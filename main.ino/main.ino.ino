@@ -19,14 +19,14 @@ int orpArrayIndex = 0;
 
 /*TDS Variables*/
 
-GravityTDS gravityTds;
+GravityTDS gravityTds;  
 float temperature = 25, tdsValue = 0;
 
 /*PH varialbes*/
 
 #define Offset 0.00            //deviation compensate 
 #define samplingInterval 20
-#define printinterval 800
+#define printinterval 0
 
 int pHArray[ArrayLenth];   //Store the average value of the sensor feedback
 int pHArrayIndex = 0;
@@ -50,7 +50,7 @@ OneWire ds(DS18B20_Pin);  // on digital pin 2
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   //TDS SET UP
   gravityTds.setPin(TdsSensorPin);
@@ -70,21 +70,27 @@ void setup() {
   tempSampleTime = millis();
   //Turpidity SET UP
   //add everything in to json object
-  int NUM_SAMPLE = 50;
-  int WAIT_TIME = 5;
+  int NUM_SAMPLE = 1500;
+  int WAIT_TIME = 0;
   String currDate = "9/20/2018";
   String response = "{\" " + currDate + " \":[";
-
+  Serial.print(response);
   for (int i = 0; i < NUM_SAMPLE; i++) {
-    if (i >= NUM_SAMPLE - 1) {
-      response += getSample();
+    //Serial.println(i);
+    if (i == NUM_SAMPLE - 1) {
+      getSample();
+      //response += getSample();
+      break;
     } else {
-      response += getSample() + ",";
+      getSample();
+      //response += getSample() + ",";
+      Serial.print(",");
     }
     delay(WAIT_TIME);
   }
-  response += "]}";
-  Serial.println(response);
+  Serial.println("]}");
+  //response += "]}";
+  //Serial.println(response);
 }
 
 void loop() {
@@ -103,6 +109,7 @@ String getSample() {
   TempProcess(StartConvert); 
   //after the reading,start the convert for next reading
   String response = "{\"Conductivity\":" + (String)cond + ", \"PH\":" + (String)PH + ", \"ORP\":" + (String)ORP + ", \"TDS\":" + (String)TDS + ", \"Turp\": " + (String)turp + ", \"Temperature\": " + (String)temperature + "}";
+  Serial.print(response);
   return response;
 }
 

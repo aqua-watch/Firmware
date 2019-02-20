@@ -274,9 +274,9 @@ def printMetricAcrossModels(metrics, models):
         
 printMetricAcrossModels(["Conductivity","PH","Turp","TDS","Temperature","ORP"],
                         [
-                         "./Models/ChemDptSamples/0.03pb_absolute.json",
-                        "./Models/ChemDptSamples/0.3pb_absolute.json",
-                        "./Models/ChemDptSamples/3pb_absolute.json",
+                        "./Models/ChemDptSamples/30pb_absolute.json",
+                        "./Models/ChemDptSamples/300pb_absolute.json",
+                        "./Models/ChemDptSamples/3000pb_absolute.json",
                         "./Models/ChemDptSamples/10pb_absolute.json",
                         "./Models/ChemDptSamples/20pb_absolute.json"])
 """
