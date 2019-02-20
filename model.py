@@ -135,7 +135,6 @@ def addToModel(add, fileName = None):
         
     with open(fileName, 'w+') as f:
             model['Exps'].append(add)
-            #pprint(model)
             json.dump(model, f)
 
 def testAccuracy():
@@ -167,12 +166,12 @@ def openLatestOutput():
 def readFromSerialPort():
     ser = serial.Serial(
             port='\\.\COM4',\
-            baudrate=9600
+            baudrate=115200
     )
 
     print("connected to: " + ser.portstr)
     data = str(ser.readline(), 'utf-8').replace('\r\n','')
-        
+    print(data)    
     ser.close()
     return json.loads(data) 
     
@@ -204,10 +203,10 @@ def normalizeMinMax(dataset):
     for sample in dataset:
         for metric, v in sample.items():
             inverted[metric].append(v)
-    for sample in cp_data:
-        for metric, v in inverted.items():
-           print(v)
-           if max(inverted[metric]) - min(inverted[metric]) == 0: 
+           
+    for sample in cp_data:   
+        for metric, v in sample.items():
+           if max(inverted[metric]) - min(inverted[metric]) > 0: 
                sample[metric] = (v - min(inverted[metric])) / (max(inverted[metric]) - min(inverted[metric]))
            else:
                sample[metric] = 0
@@ -222,14 +221,18 @@ def main():
     print("Your actions are 0 for loading latest data set from output file and adding to model \n or 1 for querying a data point from the output file")
     action = int(input())
     if(action == 0):
-        MODEL_NAME = "Models/ChemDptSamples/20pb_absolute.json";
+        MODEL_NAME = "Models/ChemDptSamples/30pb_absolute.json"
+        MODEL_NAME_NORM = "Models/ChemDptSamples/30pb_norm.json"
+        DESC = "30pb lead from chem dpt samples"
+        CONTAMINATED = 1
+        AMOUNT_OF_CONT = 30
         #init Model 
         create_init_model(MODEL_NAME)
         
         
         #data = openLatestOutput()
         data = readFromSerialPort()
-        
+        print(data)
         absolute = data[list(data.keys())[0]]
         center_point_absolute = centerPoint(absolute)
         closest_point_absolute = closestPoint(absolute)
@@ -238,9 +241,9 @@ def main():
         
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'W/ 20 ppb lead',
-                    "contaminated" : 1,
-                    "ppb_amount_contamination":10,
+                    "desc" : DESC,
+                    "contaminated" : CONTAMINATED,
+                    "ppb_amount_contamination":AMOUNT_OF_CONT,
                     "results" : data[list(data.keys())[0]], #array of objects [{ph:,cond:,...},...]
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
@@ -248,26 +251,24 @@ def main():
                 }
         addToModel(final_obj, MODEL_NAME)
         normalized_data = normalizeMinMax(data[list(data.keys())[0]])
-        MODEL_NAME = "Models/ChemDptSamples/20pb_norm.json";
-        #init Model 
-        create_init_model(MODEL_NAME)
         
+        #init Model 
+        create_init_model(MODEL_NAME_NORM)
         center_point = centerPoint(normalized_data)
         closest_point = closestPoint(normalized_data)
         standards = standard_dev_cluster(normalized_data, center_point)
         
-       
         final_obj = {
                     "timeStamp": datetime.datetime.today().strftime('%Y-%m-%d'),
-                    "desc" : 'W/ 20 ppb lead',
-                    "contaminated" : 1,
-                    "ppb_amount_contamination":10,
+                    "desc" : DESC,
+                    "contaminated" : CONTAMINATED,
+                    "ppb_amount_contamination":AMOUNT_OF_CONT,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, MODEL_NAME)
+        addToModel(final_obj, MODEL_NAME_NORM)
         
         pprint("Done!")
     elif(action == 1):

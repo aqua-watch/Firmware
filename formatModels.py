@@ -8,35 +8,43 @@ import json
 import pandas as pd
 import os, sys
 
-def formatModel():
+def formatModel(models =  [
+                        "../Models/ChemDptSamples/30pb_absolute.json",
+                        "../Models/ChemDptSamples/300pb_absolute.json",
+                        "../Models/ChemDptSamples/3000pb_absolute.json",
+                        "../Models/ChemDptSamples/10pb_absolute.json",
+                        "../Models/ChemDptSamples/20pb_absolute.json",
+                        "../Models/ChemDptSamples/Filterred_water_absolute.json"]):
     #take our json object and convert to tabular format
-    model = {}  
-    with open('../Models/distilled_water_model_absolute.json') as f:
-        model = f.read().replace('\n', '')
-        model = json.loads(model)
-    model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  
-    experiments =  model["Exps"]
+    model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated',])  
     ix = 0 #index of df
-    for exp in experiments:
-        insert = []
-        desc = exp["desc"]
-        ts = exp["timeStamp"]
-        contaminated = exp["contaminated"]
+    
+    for model_name in models:
+        print(model_name)
+        model = {}  
+        with open(model_name) as f:
+            model = f.read().replace('\n', '')
+            model = json.loads(model)
+        experiments =  model["Exps"]
         
-        for result in exp["results"]:
+        for exp in experiments:
             insert = []
-            insert.append(result["Conductivity"])
-            insert.append(result["PH"])
-            insert.append(result["ORP"])
-            insert.append(result["Turp"])
-            insert.append(result["TDS"])
-            insert.append(desc)
-            insert.append(ts)
-            insert.append(contaminated)
+            desc = exp["desc"]
+            ts = exp["timeStamp"]
+            contaminated = exp["contaminated"]
             
-            model_df.loc[ix] = (insert)
-            ix += 1
-            
+            for result in exp["results"]:
+                insert = []
+                insert.append(result["Conductivity"])
+                insert.append(result["PH"])
+                insert.append(result["ORP"])
+                insert.append(result["Turp"])
+                insert.append(result["TDS"])
+                insert.append(desc)
+                insert.append(ts)
+                insert.append(contaminated)
+                model_df.loc[ix] = (insert)
+                ix += 1
     
     return model_df
 

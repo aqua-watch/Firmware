@@ -17,6 +17,7 @@ import sys
 
 sys.path.insert(0, '../')
 from getTestingSet import createTestingSet
+
 import formatModels
 
 def build_model(model_df):
@@ -30,10 +31,13 @@ def build_model(model_df):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, stratify= y)
     #clf = LogisticRegression(random_state = 0, solver='lbfgs',
     #                      multi_class='multinomial').fit(X_train, y_train)
+    
     clf = LogisticRegression().fit(X_train, y_train)
     
     print("Accuracy on training dataset: ({0:.6f}) ".format( clf.score(X_train , y_train)))
     print("Accuracy on testing dataset: ({0:.6f}) ".format( clf.score(X_test , y_test)))
+    
+    """
     
     testingModel = createTestingSet()
     
@@ -42,7 +46,7 @@ def build_model(model_df):
     incorrect = 0
     
     for exp in testingModel:
-        print([list(exp["value"].values())[0:5]])
+        #print([list(exp["value"].values())[0:5]])
         res = clf.predict([list(exp["value"].values())[0:5]]) #0-5 only because we did not train on temp
         if(res == 1 and exp["contaminated"] == 1 or res == 0 and exp["contaminated"] == 0):
             correct += 1
@@ -53,7 +57,7 @@ def build_model(model_df):
             
     print("Accuracy on mixed testing set: ({0:.6f}) ".format(correct / total))
     
-   
+    """
     
     #result = clf.predict(x)
     #print(len(result))
