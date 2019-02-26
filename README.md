@@ -1,5 +1,17 @@
 # Sensors
 
+# Raspi
+
+<h4> Dependencies </h4> 
+The raspi requires `virtualenv` to be installed. Python dependencies can be found in requirements.txt.
+
+To run the code:
+~~~
+source dev.sh # Sets up virtual env, installs requirements, activates virtual environment.
+./web_interface/app.py
+~~~
+
+# Arduino
 <h4> Dependencies </h4>
 Only have one so far <a href="http://www.pjrc.com/teensy/arduino_libraries/OneWire.zip"> OneWire </a>
 And how to install dependencies on libraries on Arduino IDE :https://www.arduino.cc/en/Guide/Libraries#toc4

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 # -*- coding: utf-8 -*-
 from flask import Flask
 from flask import render_template
@@ -8,8 +7,8 @@ from flask import Markup
 import json
 import sys
 sys.path.insert(0, '../')
-from formatModels import get_absolute_values
-from formatModels import get_normalized_values
+from formatModels import get_absolute_values_from_json
+from formatModels import get_normalized_values_from_json
 from formatModels import get_normalized_values_json
 from formatModels import get_absolute_values_json
 #sys.path.append('arm/web_interface/')
@@ -18,15 +17,14 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def display_content():
-    
-    norm_df = get_normalized_values()
-    absolute_df = get_absolute_values()
+    norm_json = get_normalized_values_json()
+    abs_json = get_absolute_values_json()
+
+    norm_df = get_normalized_values_from_json(norm_json)
+    absolute_df = get_absolute_values_from_json(abs_json)
     
     contaminated_norm = norm_df[norm_df.Contaminated >= 1]
     contaminated_abs = absolute_df[absolute_df.Contaminated >= 1]
-    
-    norm_json = get_normalized_values_json()
-    abs_json = get_absolute_values_json()
             
     times = []
     

@@ -8,6 +8,10 @@ import json
 import pandas as pd
 import os, sys
 
+MODEL_DIR = "../Models/"
+NORM_MODEL_PATH = MODEL_DIR + "distilled_water_model_norm.json"
+ABS_MODEL_PATH =  MODEL_DIR + "distilled_water_model_absolute.json"
+
 def formatModel(models =  [
                         "../Models/ChemDptSamples/30pb_absolute.json",
                         "../Models/ChemDptSamples/300pb_absolute.json",
@@ -111,21 +115,13 @@ def formatModel_extra_dims():
 def get_normalized_values_json():
     #take our json object and convert to tabular format
     model = {}  
-    with open('../../Models/test_arm_norm.json') as f:
+    with open(NORM_MODEL_PATH) as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
     return model
 
-def get_normalized_values():
-    cwd = os.getcwd()
-    
-    #take our json object and convert to tabular format
-    model = {}  
-    with open('../../Models/test_arm_norm.json') as f:
-        model = f.read().replace('\n', '')
-        model = json.loads(model)
-        
+def get_normalized_values_from_json(model):
     model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  
     experiments =  model["Exps"]
     ix = 0 #index of df
@@ -155,18 +151,13 @@ def get_normalized_values():
 def get_absolute_values_json():
     #take our json object and convert to tabular format
     model = {}  
-    with open('../../Models/test_arm_absolute.json') as f:
+    with open(ABS_MODEL_PATH) as f:
         model = f.read().replace('\n', '')
         model = json.loads(model)
         
     return model
 
-def get_absolute_values():
-    #take our json object and convert to tabular format
-    model = {}  
-    with open('../../Models/test_arm_absolute.json') as f:
-        model = f.read().replace('\n', '')
-        model = json.loads(model)
+def get_absolute_values_from_json(model):
     model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated'])  
     experiments =  model["Exps"]
     ix = 0 #index of df
