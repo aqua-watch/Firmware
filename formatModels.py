@@ -14,13 +14,13 @@ def formatModel(models =  [
                         "../Models/ChemDptSamples/3000pb_absolute.json",
                         "../Models/ChemDptSamples/10pb_absolute.json",
                         "../Models/ChemDptSamples/20pb_absolute.json",
-                        "../Models/ChemDptSamples/Filterred_water_absolute.json"]):
+                        "../Models/ChemDptSamples/deion_absolute.json"]):
     #take our json object and convert to tabular format
     model_df = pd.DataFrame([], columns = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated',])  
     ix = 0 #index of df
-    
+    total_num_contaminated = 0
     for model_name in models:
-        print(model_name)
+        
         model = {}  
         with open(model_name) as f:
             model = f.read().replace('\n', '')
@@ -28,11 +28,12 @@ def formatModel(models =  [
         experiments =  model["Exps"]
         
         for exp in experiments:
+            print(model_name + " Experiment sample size: " + str(len(exp["results"])))
             insert = []
             desc = exp["desc"]
             ts = exp["timeStamp"]
             contaminated = exp["contaminated"]
-            
+            total_num_contaminated += contaminated
             for result in exp["results"]:
                 insert = []
                 insert.append(result["Conductivity"])
@@ -46,6 +47,9 @@ def formatModel(models =  [
                 model_df.loc[ix] = (insert)
                 ix += 1
     
+    print("================================================")
+    print("Precentange of contaminated models:")
+    print(total_num_contaminated/len(models))
     return model_df
 
 def formatModel_extra_dims():

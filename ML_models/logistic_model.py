@@ -38,7 +38,6 @@ def build_model(model_df):
     print("Accuracy on testing dataset: ({0:.6f}) ".format( clf.score(X_test , y_test)))
     
     """
-    
     testingModel = createTestingSet()
     
     total = len(testingModel)
