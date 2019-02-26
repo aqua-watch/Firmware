@@ -221,11 +221,11 @@ def main():
     print("Your actions are 0 for loading latest data set from output file and adding to model \n or 1 for querying a data point from the output file")
     action = int(input())
     if(action == 0):
-        MODEL_NAME = "Models/ChemDptSamples/30pb_absolute.json"
-        MODEL_NAME_NORM = "Models/ChemDptSamples/30pb_norm.json"
+        MODEL_NAME = "Models/ChemDptSamples/deion_absolute.json"
+        MODEL_NAME_NORM = "Models/ChemDptSamples/deion_norm.json"
         DESC = "30pb lead from chem dpt samples"
-        CONTAMINATED = 1
-        AMOUNT_OF_CONT = 30
+        CONTAMINATED = 0
+        AMOUNT_OF_CONT = 0
         #init Model 
         create_init_model(MODEL_NAME)
         
