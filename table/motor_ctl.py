@@ -10,7 +10,7 @@ from enum import IntEnum
 
 mh = Adafruit_MotorHAT(addr = 0x60)
 
-UP_DOWN_STEPS = 300
+UP_DOWN_STEPS = 270
 ROT_STEPS = 1000
 
 UP_DOWN_MOTOR = 1
@@ -37,7 +37,7 @@ def releaseAllMotors():
 def runOnMotor(motor_num, fn):
     motor = mh.getStepper(200, motor_num)
     motor.setSpeed(200)
-    fn(motor);
+    fn(motor)
     releaseAllMotors()
 
 def fullWind(direction):
@@ -62,51 +62,11 @@ def moveToSample():
     windUp()
     rotateCW()
     windDown()
-    alertInSample()
 
 def moveToSolution():
     windUp()
     rotateCCW()
     windDown()
-    alertInSolution()
 
-def shouldBeInSample():
-    return GPIO.input(LOCATION_REQUEST_PIN) == Position.SAMPLE
-
-def shouldBeInSolution():
-    return GPIO.input(LOCATION_REQUEST_PIN) == Position.SOLUTION
-
-def alertInSolution():
-    GPIO.output(LOCATION_STATE_PIN, Position.SOLUTION)
-
-def alertInSample():
-    GPIO.output(LOCATION_STATE_PIN, Position.SAMPLE)
-
-def runAuto():
-    curr_pos = Position.SAMPLE
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(LOCATION_STATE_PIN, GPIO.OUT)
-    GPIO.setup(LOCATION_REQUEST_PIN, GPIO.IN)
-    while (True):
-        while(shouldBeInSample()):
-            pass
-        moveToSolution()
-        while(shouldBeInSolution()):
-            pass
-        moveToSample()
-
+# Make sure all motors get released so that they don't overheat and set on fire
 atexit.register(releaseAllMotors)
-arg = sys.argv[1]
-
-options = {
-    'up': lambda: fullWind(UP),
-    'down': lambda: fullWind(DOWN),
-    'cw': lambda: rotate180(CW),
-    'ccw': lambda: rotate180(CCW),
-    'auto': runAuto,
-}
-
-if arg not in options:
-    print('Invalid arg {}. Valid options are: {}'.format(arg, options.keys()))
-else:
-    options[arg]()

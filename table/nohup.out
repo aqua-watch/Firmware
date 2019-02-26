@@ -1,0 +1,16 @@
+Collecting pandas
+  Using cached https://files.pythonhosted.org/packages/81/fd/b1f17f7dc914047cd1df9d6813b944ee446973baafe8106e4458bfb68884/pandas-0.24.1.tar.gz
+Collecting numpy>=1.12.0 (from pandas)
+  Using cached https://files.pythonhosted.org/packages/2b/26/07472b0de91851b6656cbc86e2f0d5d3a3128e7580f23295ef58b6862d6c/numpy-1.16.1.zip
+Collecting python-dateutil>=2.5.0 (from pandas)
+  Using cached https://files.pythonhosted.org/packages/41/17/c62faccbfbd163c7f57f3844689e3a78bae1f403648a6afb1d0866d87fbb/python_dateutil-2.8.0-py2.py3-none-any.whl
+Collecting pytz>=2011k (from pandas)
+  Using cached https://files.pythonhosted.org/packages/61/28/1d3920e4d1d50b19bc5d24398a7cd85cc7b9a75a490570d5a30c57622d34/pytz-2018.9-py2.py3-none-any.whl
+Collecting six>=1.5 (from python-dateutil>=2.5.0->pandas)
+  Using cached https://files.pythonhosted.org/packages/73/fb/00a976f728d0d1fecfe898238ce23f502a721c0ac0ecfedb80e0d88c64e9/six-1.12.0-py2.py3-none-any.whl
+Building wheels for collected packages: pandas, numpy
+  Running setup.py bdist_wheel for pandas: started
+  Running setup.py bdist_wheel for pandas: still running...
+  Running setup.py bdist_wheel for pandas: still running...
+  Running setup.py bdist_wheel for pandas: still running...
+  Running setup.py bdist_wheel for pandas: still running...
