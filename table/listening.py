@@ -43,31 +43,33 @@ def timeToClean():
 		(curr_position == Position.SAMPLE and currTime() > start_time + TIME_TO_SAMPLE)
 
 def performSample():
-	while(True):
-		current_data_set = aqua_watch_serial.readline()
-		try:
-			testable_dataset = json.loads(current_data_set)
-			continue_flag = False
-			for k, v in testable_dataset.items():
-				if(not type(v) == list or len(v) < 49):
-					print("Malformed data: " + v)
-					continue_flag = True
-					break
-				else:
-					for val in v:
-						if(not type(val) == dict or len(val) < 5):
-							print("Malformed data: " + val)
-							continue_flag = True
-							break
-			if(continue_flag):
-				continue_flag = False
-				continue
+	#Tell Aqua Watch to sample
+	aqua_watch_serial.write("1\n")
 
-		except:	
+	current_data_set = aqua_watch_serial.readline()
+	try:
+		testable_dataset = json.loads(current_data_set)
+		continue_flag = False
+		for k, v in testable_dataset.items():
+			if(not type(v) == list or len(v) < 49):
+				print("Malformed data: " + v)
+				continue_flag = True
+				break
+			else:
+				for val in v:
+					if(not type(val) == dict or len(val) < 5):
+						print("Malformed data: " + val)
+						continue_flag = True
+						break
+		if(continue_flag):
+			continue_flag = False
 			continue
+
+	except:	
+		continue
 			
-		break 
-	# model.insert_model("test_arm", current_data_set)
+		
+	model.insert_model("/table_test/test", current_data_set)
 	print("SAMPLE DONE")
 
 def main():
