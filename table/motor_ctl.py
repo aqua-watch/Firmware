@@ -10,7 +10,7 @@ from enum import IntEnum
 
 mh = Adafruit_MotorHAT(addr = 0x60)
 
-UP_DOWN_STEPS = 270
+UP_DOWN_STEPS = 450
 ROT_STEPS = 1000
 
 UP_DOWN_MOTOR = 1

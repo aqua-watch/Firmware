@@ -23,9 +23,9 @@ TIME_BEFORE_CHECK = 15
 TIME_TO_SAMPLE = datetime.timedelta(hours=0, minutes=0, seconds=15)
 TIME_TO_CLEAN = datetime.timedelta(hours=0, minutes=0, seconds=10)
 
-# aqua_watch_port = '/dev/ttyACM1' 
-# aqua_watch_serial = Serial(aqua_watch_port, 9600)
-# atexit.register(lambda: aqua_watch_serial.close())
+aqua_watch_port = '/dev/ttyACM0' 
+aqua_watch_serial = Serial(aqua_watch_port, 9600)
+atexit.register(lambda: aqua_watch_serial.close())
 curr_position = Position.SAMPLE
 start_time = datetime.datetime.now()
 
