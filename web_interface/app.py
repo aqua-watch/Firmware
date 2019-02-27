@@ -7,21 +7,21 @@ from flask import Markup
 import json
 import sys
 sys.path.insert(0, '../')
-from formatModels import get_absolute_values_from_json
-from formatModels import get_normalized_values_from_json
-from formatModels import get_normalized_values_json
-from formatModels import get_absolute_values_json
+from formatModels import load_model_json, get_values_from_json
 #sys.path.append('arm/web_interface/')
+
+NORM_MODEL_PATH = MODEL_DIR + "distilled_water_model_norm.json"
+ABS_MODEL_PATH =  MODEL_DIR + "distilled_water_model_absolute.json"
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def display_content():
-    norm_json = get_normalized_values_json()
-    abs_json = get_absolute_values_json()
+    norm_json = load_model_json(NORM_MODEL_PATH)
+    abs_json = load_model_json(ABS_MODEL_PATH)
 
-    norm_df = get_normalized_values_from_json(norm_json)
-    absolute_df = get_absolute_values_from_json(abs_json)
+    norm_df = get_values_from_json(norm_json)
+    absolute_df = get_values_from_json(abs_json)
     
     contaminated_norm = norm_df[norm_df.Contaminated >= 1]
     contaminated_abs = absolute_df[absolute_df.Contaminated >= 1]
