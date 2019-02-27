@@ -6,6 +6,7 @@ Created on Mon Feb 11 20:01:32 2019
 """
 import json
 import collections
+import math
 
 def euclideanDistance(instance1, instance2):
 	distance = 0
@@ -138,8 +139,7 @@ def getAverageCenterPoint(exp_object):
 
 def getModelsppbFromDesc(model):
     #this should be replaced with another field in the exp object -- > amount_of_contamination
-    desc = model["Exps"][0]["desc"]
-    return float(desc.split('W/')[1].split('pp')[0])
+    return model["Exps"][0]["ppb_amount_contamination"]
 
 def getPpb(queryCenterPoint, labledModels):
     RANGE = 50
@@ -167,19 +167,19 @@ def getPpb(queryCenterPoint, labledModels):
         models_contamination_amount = getModelsppbFromDesc(model)
         ppb += weight * models_contamination_amount
  
-    print(ppb)
+    print(str(ppb) + " Ppb ====== " + labledModels)
     return ppb
         
 
 def getMapping():
     
     labledSamples = [
-                        "./Models/ChemDptSamples/0.03pb_absolute.json",
-                        "./Models/ChemDptSamples/0.3pb_absolute.json",
-                        "./Models/ChemDptSamples/3pb_absolute.json",
+                        "./Models/ChemDptSamples/3000pb_absolute.json",
+                        "./Models/ChemDptSamples/300pb_absolute.json",
+                        "./Models/ChemDptSamples/30pb_absolute.json",
                         "./Models/ChemDptSamples/10pb_absolute.json",
                         "./Models/ChemDptSamples/20pb_absolute.json"]
-    timedModel = getContaminatedModel('./Models/5_min_model_absolute.json', 5)
+    timedModel = getContaminatedModel('./Models/distilled_water_model_norm.json', 15)
     labledModels = getLabledModel(labledSamples)
     #add an average center point to each experimetn in the labled model
     for model in labledModels:

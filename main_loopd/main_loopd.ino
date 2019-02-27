@@ -77,18 +77,21 @@ void setup() {
 void loop() {
   String currDate = "9/20/2018";
   String response = "{\" " + currDate + " \":[";
-
+  int incomingByte;
   for (int i = 0; i < SAMPLE_SIZE; i++) {
     if (i >= SAMPLE_SIZE-1) {
       response += getSample();
     } else {
       response += getSample() + ",";
     }
-    delay(500);
+    
   }
   response += "]}";
 
-  delay(15000);
+  if (Serial.available() > 0) {
+      // read the incoming byte:
+      incomingByte = Serial.read();
+  }
 }
 
 String getSample() {
