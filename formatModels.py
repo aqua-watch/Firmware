@@ -7,6 +7,8 @@ Created on Wed Oct 24 16:16:24 2018
 import json
 import pandas as pd
 import os, sys
+from pprint import pprint
+
 
 MODEL_DIR = "../Models/"
 
@@ -24,14 +26,20 @@ def formatModel(models = [
     model_df = pd.DataFrame([], columns=NORMAL_COLS)  
     ix = 0 #index of df
     total_num_contaminated = 0
+    center_points = {}
     for model_name in models:
-        model = get_model_json(model_name)
+        model = {}  
+        with open(model_name) as f:
+            model = f.read().replace('\n', '')
+            model = json.loads(model)
         experiments =  model["Exps"]
         
         for exp in experiments:
+            
             print(model_name + " Experiment sample size: " + str(len(exp["results"])))
             insert = []
             desc = exp["desc"]
+            center_points[desc] = exp["center_point"]
             ts = exp["timeStamp"]
             contaminated = exp["contaminated"]
             total_num_contaminated += contaminated
@@ -51,6 +59,11 @@ def formatModel(models = [
     print("================================================")
     print("Precentange of contaminated models:")
     print(total_num_contaminated/len(models))
+    print("================================================")
+    print("Center Points:")
+    print(center_points)
+    
+    
     return model_df
 
 def formatModel_extra_dims():

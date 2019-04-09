@@ -167,7 +167,7 @@ def getPpb(queryCenterPoint, labledModels):
         models_contamination_amount = getModelsppbFromDesc(model)
         ppb += weight * models_contamination_amount
  
-    print(str(ppb) + " Ppb ====== " + labledModels)
+    print(str(ppb) + " Ppb ====== ")
     return ppb
         
 

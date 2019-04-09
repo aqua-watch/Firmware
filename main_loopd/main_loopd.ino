@@ -17,7 +17,7 @@ byte DS18B20_Pin = 2; //DS18B20 signal, pin on digital 2
 int orpArray[ArrayLenth];
 int orpArrayIndex = 0;
 
-#define SAMPLE_DELAY_TIME 500
+#define SAMPLE_DELAY_TIME 0
 #define SAMPLE_SIZE 50
 
 /*TDS Variables*/
@@ -87,11 +87,15 @@ void loop() {
     
   }
   response += "]}";
-
-  if (Serial.available() > 0) {
-      // read the incoming byte:
-      incomingByte = Serial.read();
+  Serial.println(response);
+  
+  while (Serial.available() <= 0);
+  while (Serial.available()) {
+    Serial.read();
   }
+      // read the incoming byte:
+
+
 }
 
 String getSample() {
@@ -105,7 +109,7 @@ String getSample() {
   TempProcess(StartConvert); 
   //after the reading,start the convert for next reading
   String response = "{\"Conductivity\":" + (String)cond + ", \"PH\":" + (String)PH + ", \"ORP\":" + (String)ORP + ", \"TDS\":" + (String)TDS + ", \"Turp\": " + (String)turp + ", \"Temperature\": " + (String)temperature + "}";
-  Serial.println(response);
+  //Serial.println(response);
   return response;
 }
 
@@ -168,8 +172,8 @@ float getConductivity() {
 
   float TempCoefficient = 1.0 + 0.0185 * (temperature - 25.0); //temperature compensation formula: fFinalResult(25^C) = fFinalResult(current)/(1.0+0.0185*(fTP-25.0));
   float CoefficientVolatge = (float)averageVoltage / TempCoefficient;
-  if (CoefficientVolatge < 150)Serial.println("No solution!"); //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
-  else if (CoefficientVolatge > 3300)Serial.println("Out of the range!"); //>20ms/cm,out of the range
+  if (CoefficientVolatge < 150)  return -1;  //Serial.println("No solution!"); //25^C 1413us/cm<-->about 216mv  if the voltage(compensate)<150,that is <1ms/cm,out of the range
+  else if (CoefficientVolatge > 3300) return -1;  //Serial.println("Out of the range!"); //>20ms/cm,out of the range
   else
   {
     if (CoefficientVolatge <= 448)ECcurrent = 6.84 * CoefficientVolatge - 64.32; //1ms/cm<EC<=3ms/cm
