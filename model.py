@@ -278,8 +278,9 @@ def main():
         
         pprint("Done!")
 
-def insert_model(modelName, dataset = None):
-    
+def insert_model(modelName, desc, isContaminated, ppb_contamination_amount, dataset = None):
+        
+
         if(dataset == None):
             data = openLatestOutput()
         else:
@@ -294,15 +295,16 @@ def insert_model(modelName, dataset = None):
         final_obj = {}
         final_obj = {
                     "timeStamp": str(datetime.datetime.now()),
-                    "desc" : 'Tap Water',
-                    "contaminated" : 0,
+                    "desc" : desc,
+                    "contaminated" : isContaminated,
+                    "ppb_amount_contamination":ppb_contamination_amount,
                     "results" : data[list(data.keys())[0]],
                     "closest_point" : closest_point_absolute,
                     "center_point"  : center_point_absolute,
                     'standard_deviation': standards_absolute
                 }
-        addToModel(final_obj, "Models/" + modelName + "_absolute.json")
-        normalized_data = normalizeDataSet(data[list(data.keys())[0]])
+        addToModel(final_obj, "../Models/" + modelName + "_absolute.json")
+        normalized_data = normalizeMinMax(data[list(data.keys())[0]])
         
         
         center_point = centerPoint(normalized_data)
@@ -312,15 +314,15 @@ def insert_model(modelName, dataset = None):
         final_obj = {}
         final_obj = {
                     "timeStamp": str(datetime.datetime.now()),
-                    "desc" : 'Tap Water',
-                    "contaminated" :0,
+                    "desc" : desc,
+                    "contaminated" :isContaminated,
                     "results" : data[list(data.keys())[0]],
+                    "ppb_amount_contamination":ppb_contamination_amount,
                     "closest_point" : closest_point,
                     "center_point"  : center_point,
                     'standard_deviation': standards
                 }
-        addToModel(final_obj, "Models/" + modelName + "_norm.json")
+        addToModel(final_obj, "../Models/" + modelName + "_norm.json")
         
         pprint("Done!")
 
-main()

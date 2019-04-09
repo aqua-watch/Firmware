@@ -57,17 +57,17 @@
 		$("table").addClass("table-striped");
 
 		let times = {{times|safe}};
-		let norm_ph={{norm_ph|safe}};
-		let norm_cond={{norm_cond|safe}};
-		let norm_orp={{norm_orp|safe}};
-		let norm_tds={{norm_tds|safe}};
-		let norm_turp={{norm_turp|safe}};
+		// let norm_ph={{norm_ph|safe}};
+		// let norm_cond={{norm_cond|safe}};
+		// let norm_orp={{norm_orp|safe}};
+		// let norm_tds={{norm_tds|safe}};
+		// let norm_turp={{norm_turp|safe}};
 
-		let norm_ph_std={{norm_ph_std|safe}};
-		let norm_cond_std={{norm_cond_std|safe}};
-		let norm_orp_std={{norm_orp_std|safe}};
-		let norm_tds_std={{norm_tds_std|safe}};
-		let norm_turp_std={{norm_turp_std|safe}};	
+		// let norm_ph_std={{norm_ph_std|safe}};
+		// let norm_cond_std={{norm_cond_std|safe}};
+		// let norm_orp_std={{norm_orp_std|safe}};
+		// let norm_tds_std={{norm_tds_std|safe}};
+		// let norm_turp_std={{norm_turp_std|safe}};	
 
 		let abs_ph={{abs_ph|safe}};
 		let abs_cond={{abs_cond|safe}};
@@ -75,87 +75,87 @@
 		let abs_tds={{abs_tds|safe}};
 		let abs_turp={{abs_turp|safe}};		
 
-		function display_center_norm(){
-			var Ph = {
-			  x: times,
-			  y: norm_ph,
-			  name: "Ph",
-			  mode: 'lines'
-			};
-			var Conductivity = {
-			  x: times,
-			  y: norm_cond,
-			  name: "Conductivity",
-			  mode: 'lines'
-			};
-			var ORP = {
-			  x: times,
-			  y: norm_orp,
-			  name: "ORP",
-			  mode: 'lines'
-			};
-			var TDS = {
-			  x: times,
-			  y: norm_tds,
-			  name: "TDS",
-			  mode: 'lines'
-			};
-			var Turbidity = {
-			  x: times,
-			  y: norm_turp,
-			  name: "Turbidity",
-			  mode: 'lines'
-			};
+		// function display_center_norm(){
+		// 	var Ph = {
+		// 	  x: times,
+		// 	  y: norm_ph,
+		// 	  name: "Ph",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var Conductivity = {
+		// 	  x: times,
+		// 	  y: norm_cond,
+		// 	  name: "Conductivity",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var ORP = {
+		// 	  x: times,
+		// 	  y: norm_orp,
+		// 	  name: "ORP",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var TDS = {
+		// 	  x: times,
+		// 	  y: norm_tds,
+		// 	  name: "TDS",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var Turbidity = {
+		// 	  x: times,
+		// 	  y: norm_turp,
+		// 	  name: "Turbidity",
+		// 	  mode: 'lines'
+		// 	};
 
-			var data = [ Ph, Conductivity, ORP, TDS, Turbidity ];
+		// 	var data = [ Ph, Conductivity, ORP, TDS, Turbidity ];
 
-			var layout = {
-			  title:'Average Normalized values'
-			};
+		// 	var layout = {
+		// 	  title:'Average Normalized values'
+		// 	};
 
-			Plotly.newPlot('norm_avg', data, layout);
-		}
+		// 	Plotly.newPlot('norm_avg', data, layout);
+		// }
 
-		function display_std_norm(){
-			var Ph = {
-			  x: times,
-			  y: norm_ph_std,
-			  name: "Ph",
-			  mode: 'lines'
-			};
-			var Conductivity = {
-			  x: times,
-			  y: norm_cond_std,
-			  name: "Conductivity",
-			  mode: 'lines'
-			};
-			var ORP = {
-			  x: times,
-			  y: norm_orp_std,
-			  name: "ORP",
-			  mode: 'lines'
-			};
-			var TDS = {
-			  x: times,
-			  y: norm_tds_std,
-			  name: "TDS",
-			  mode: 'lines'
-			};
-			var Turbidity = {
-			  x: times,
-			  y: norm_turp_std,
-			  name: "Turbidity",
-			  mode: 'lines'
-			};
+		// function display_std_norm(){
+		// 	var Ph = {
+		// 	  x: times,
+		// 	  y: norm_ph_std,
+		// 	  name: "Ph",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var Conductivity = {
+		// 	  x: times,
+		// 	  y: norm_cond_std,
+		// 	  name: "Conductivity",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var ORP = {
+		// 	  x: times,
+		// 	  y: norm_orp_std,
+		// 	  name: "ORP",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var TDS = {
+		// 	  x: times,
+		// 	  y: norm_tds_std,
+		// 	  name: "TDS",
+		// 	  mode: 'lines'
+		// 	};
+		// 	var Turbidity = {
+		// 	  x: times,
+		// 	  y: norm_turp_std,
+		// 	  name: "Turbidity",
+		// 	  mode: 'lines'
+		// 	};
 
-			var data = [ Ph, Conductivity, ORP, TDS, Turbidity ];
+		// 	var data = [ Ph, Conductivity, ORP, TDS, Turbidity ];
 
-			var layout = {
-			  title:'Standardized Normalized values'
-			};
+		// 	var layout = {
+		// 	  title:'Standardized Normalized values'
+		// 	};
 
-			Plotly.newPlot('norm_std', data, layout);
-		}
+		// 	Plotly.newPlot('norm_std', data, layout);
+		// }
 
 		function display_abs(){
 			var Ph = {
@@ -216,8 +216,8 @@
 
 		}
 
-		display_center_norm();
-		display_std_norm();
+		// display_center_norm();
+		// display_std_norm();
 		display_abs();
 
 	});
