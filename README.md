@@ -24,8 +24,8 @@ https://www.dfrobot.com/wiki/index.php/Analog_ORP_Meter(SKU:SEN0165)
 TODO: list out what each of the arduino projects does and their input/output formats/baudrate configuration, etc
 
 <h4> Table </h4>
-The `listening.py` script continuously runs experiments using the table, and writes the sample outputs to the model specified as the MODEL_PATH in the code, with the description specified in the MODEL_DESCRIPTION variable.
-$~$
+The `listening.py` script continuously runs experiments using the table, and writes the sample outputs to the model specified as the MODEL_PATH in the code, with the description specified in the MODEL_DESCRIPTION variable. 
+
 To run the experiment logic without actually sampling (i.e. just moving the sensors back and forth between the sample and the cleaning solution), run `listening.py` with the `--no_dween` flag. The script should be started with the sensors fully lowered into the sample, as it will immediately begin sampling when run.
 
 <h4> Web interface </h4>
@@ -38,5 +38,3 @@ source dev.sh # Sets up virtual env, installs requirements, activates virtual en
 ~~~
 
 The web interface will run on port 5000.
-
-
