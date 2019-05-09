@@ -25,7 +25,7 @@ TODO: list out what each of the arduino projects does and their input/output for
 
 <h4> Table </h4>
 The `listening.py` script continuously runs experiments using the table, and writes the sample outputs to the model specified as the MODEL_PATH in the code, with the description specified in the MODEL_DESCRIPTION variable.
-
+$~$
 To run the experiment logic without actually sampling (i.e. just moving the sensors back and forth between the sample and the cleaning solution), run `listening.py` with the `--no_dween` flag. The script should be started with the sensors fully lowered into the sample, as it will immediately begin sampling when run.
 
 <h4> Web interface </h4>
