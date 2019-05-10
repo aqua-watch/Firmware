@@ -116,3 +116,5 @@ dmypy.json
 
 # virtual env folder
 aquawatch-env
+
+.vscode
