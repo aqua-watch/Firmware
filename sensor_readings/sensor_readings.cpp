@@ -150,19 +150,28 @@ float sensorReadings::TempProcess(bool ch)
 }
 
 /* PH functions*/
-double sensorReadings::getPH() {
+float sensorReadings::getPH() {
   static unsigned long samplingTime = millis();
   static unsigned long printTime = millis();
-  static float pHValue, voltage;
-  // pHArray[pHArrayIndex++] = analogRead(SensorReadings.phPin);
-  int PHsensorVal = analogRead(SensorReadings.phPin);
-
-  voltage = PHsensorVal * 5.0 / 1024;
-
-  pHValue = 3.5 * SensorReadings.VOLTAGE + SensorReadings.OFFSET;
-  samplingTime = millis();
+  static float pHValue,voltage;
+  int printInterval  = 800;
+  if(millis()-samplingTime > samplingInterval)
+  {
+      pHArray[pHArrayIndex++]=analogRead(SensorReadings.phPin);
+      if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
+      voltage = avergearray(pHArray, ArrayLenth)*5.0/1024;
+      pHValue = 3.5*SensorReadings.VOLTAGE+SensorReadings.OFFSET;
+      samplingTime=millis();
+  }
+  if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
+  {
+    Serial.print("Voltage:");
+        Serial.print(voltage,2);
+        Serial.print("    pH value: ");
+        Serial.println(pHValue,2);
+        printTime=millis();
+  }
   return pHValue;
-  
 }
 
 /* TDS functions*/
@@ -205,3 +214,23 @@ int sensorReadings::getORP() {
   //return finalVal;
 }
 
+/******************  TESTS  ******************/
+
+int sensorReadings::testAllSensors(){
+  float ph = SensorReadings.getPH();
+  int ORP = SensorReadings.getORP();
+  double TDS = SensorReadings.getTDS();
+  float cond = SensorReadings.getConductivity();
+  float turb = SensorReadings.getTurpidity();
+
+  //pH
+  if(ph <= 0 || ph >= 14) return 0;
+  //ORP
+  if(ORP <= -2000 || ORP >= 2000) return 0; 
+  //TDS
+  if(TDS <= 0 || TDS > 1000) return 0;
+  //Conductivity
+  if(cond < 1 || cond > 15) return 0;
+  //TODO write a test for turb
+  return 1;
+}

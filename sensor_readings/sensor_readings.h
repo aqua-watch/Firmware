@@ -23,9 +23,10 @@ class sensorReadings{
 		float getTurpidity();
         float getConductivity();
         float TempProcess(bool ch);
-        double getPH();
+        float getPH();
         double getTDS();
         int getORP();
+        int testAllSensors();
         int StartConvert = 0;
         int ReadTemperature = 1;
         int ArrayLenth = 40;    //times of collection
