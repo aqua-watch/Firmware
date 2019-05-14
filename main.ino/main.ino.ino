@@ -7,10 +7,11 @@ void setup() {
   Serial.begin(115200);
   //Turpidity SET UP
   //add everything in to json object
-  int NUM_SAMPLE = 1500;
+  int NUM_SAMPLE = 2000;
   int WAIT_TIME = 0;
   String currDate = "key";
   String response = "{\" " + currDate + " \":[";
+  Serial.print("start");
   Serial.print(response);
   for (int i = 0; i < NUM_SAMPLE; i++) {
     //Serial.println(i);
@@ -21,27 +22,27 @@ void setup() {
     } else {
       getSample();
       //response += getSample() + ",";
-      Serial.print(",");
+    Serial.print(",");
     }
     delay(WAIT_TIME);
   }
-  Serial.println("]}");
-  //response += "]}";
+   Serial.println("]}");
+  response += "]}";
   //Serial.println(response);
+//  Serial.println("~");
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  return;
-}
+void loop() {}
 
 String getSample() {
+  while(readingsObj.testAllSensors() != 0){
+      Serial.println("Failed tests");
+    }
   float turp = readingsObj.getTurpidity();
   float cond = readingsObj.getConductivity();
-  float PH = readingsObj.getPH();
-  float ORP = readingsObj.getORP();
+  double PH = readingsObj.getPH();
+  int ORP = readingsObj.getORP();
   double TDS = readingsObj.getTDS();
-  
   float temperature = readingsObj.TempProcess(readingsObj.ReadTemperature);  // read the current temperature from the  DS18B20
   readingsObj.TempProcess(readingsObj.StartConvert); 
   //after the reading,start the convert for next reading

@@ -153,23 +153,16 @@ float sensorReadings::TempProcess(bool ch)
 float sensorReadings::getPH() {
   static unsigned long samplingTime = millis();
   static unsigned long printTime = millis();
-  static float pHValue,voltage;
+  static float pHValue,voltage, analog_ph;
   int printInterval  = 800;
   if(millis()-samplingTime > samplingInterval)
   {
-      pHArray[pHArrayIndex++]=analogRead(SensorReadings.phPin);
-      if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
-      voltage = avergearray(pHArray, ArrayLenth)*5.0/1024;
-      pHValue = 3.5*SensorReadings.VOLTAGE+SensorReadings.OFFSET;
+      // pHArray[pHArrayIndex++]=analogRead(SensorReadings.phPin);
+      // if(pHArrayIndex==ArrayLenth)pHArrayIndex=0;
+      analog_ph = analogRead(SensorReadings.phPin);
+      voltage = analog_ph * 5.0 / 1024;
+      pHValue = 3.5 * voltage + SensorReadings.OFFSET;
       samplingTime=millis();
-  }
-  if(millis() - printTime > printInterval)   //Every 800 milliseconds, print a numerical, convert the state of the LED indicator
-  {
-    Serial.print("Voltage:");
-        Serial.print(voltage,2);
-        Serial.print("    pH value: ");
-        Serial.println(pHValue,2);
-        printTime=millis();
   }
   return pHValue;
 }
@@ -232,5 +225,6 @@ int sensorReadings::testAllSensors(){
   //Conductivity
   if(cond < 1 || cond > 15) return 0;
   //TODO write a test for turb
+  if(turb <= 0) return 0;
   return 1;
 }
