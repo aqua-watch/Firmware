@@ -241,8 +241,9 @@ def printTurp():
     plt.show()
     
 
-def printMetricAcrossModels(metrics, models):
-    ys = [1,2,3,4]
+def printMetricAcrossModels(metrics, models, mins_btwn_sample):
+    
+    time = 0
     lines = ['--','-',':','--y','--g']
 
     
@@ -251,6 +252,7 @@ def printMetricAcrossModels(metrics, models):
         
         for ML_Model in models:
             idx = 0
+            ys = []
             with open(ML_Model) as f:
                 model = f.read().replace('\n', '')
                 model = json.loads(model)
@@ -258,20 +260,25 @@ def printMetricAcrossModels(metrics, models):
             measurments = []
             exps = model["Exps"]
             for exp in exps:
-                measurments.append(exp["center_point"][metric])
             
+                
+                measurments.append(exp["center_point"][metric])
+                ys.append(time)
+                time += mins_btwn_sample;
+                
+            print(len(ys), len(measurments))
             plt.plot( ys, measurments, lines[idx], label=str(ML_Model.split('/')[-1]))
             idx += 1
             
         plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
         plt.title("Average "+metric+" values")
         plt.ylabel("Absolute sensor measurement")
-        plt.xlabel("Number of samples")
+        plt.xlabel("Minutes")
                 
         plt.draw()
         plt.show()
         
-        
+        """
 printMetricAcrossModels(["Conductivity","PH","Turp","TDS","Temperature","ORP"],
                         [
                         "./Models/ChemDptSamples/30pb_absolute.json",
@@ -279,6 +286,10 @@ printMetricAcrossModels(["Conductivity","PH","Turp","TDS","Temperature","ORP"],
                         "./Models/ChemDptSamples/3000pb_absolute.json",
                         "./Models/ChemDptSamples/10pb_absolute.json",
                         "./Models/ChemDptSamples/20pb_absolute.json"])
+"""
+printMetricAcrossModels(["Conductivity","PH","Turp","TDS","Temperature","ORP"],
+                        ["Models/phase_1/model_absolute.json"],
+                        10)
 """
 printCond()
 printPH()

@@ -63,8 +63,23 @@ def build_model(model_df):
     #print(result)
     
     
-model_df = formatModels.formatModel()
-build_model(model_df)
+contaminated_model_df = formatModels.formatModel(["../Models/phase_1/model_absolute.json"])
+uncontaminated_model_df = formatModels.formatModel(["../Models/ChemDptSamples/unContWater_absolute.json",
+                                                    "../Models/ChemDptSamples/deion_absolute.json",
+                                                    "../Models/ChemDptSamples/Filterred_water_absolute.json"])
+    
+contaminted_ppb_samples = formatModels.formatModel(["../Models/ChemDptSamples/0.03pb_absolute.json",
+                                                    "../Models/ChemDptSamples/0.3pb_absolute.json",
+                                                    "../Models/ChemDptSamples/3pb_absolute.json"
+                                                    ,"../Models/ChemDptSamples/30pb_absolute.json",
+                                                    "../Models/ChemDptSamples/300pb_absolute.json",
+                                                    "../Models/ChemDptSamples/20pb_absolute.json",
+                                                    "../Models/ChemDptSamples/10pb_absolute.json"])
+#build_model(
 
-#print(model_df)
+print("===============================================")    
+    
+#print(contaminated_model_df.append(uncontaminated_model_df))
 
+build_model(contaminated_model_df.append(uncontaminated_model_df).append(contaminted_ppb_samples))
+print("===============================================")    
