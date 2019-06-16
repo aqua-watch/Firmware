@@ -15,8 +15,12 @@ MODEL_DIR = "../Models/"
 NORMAL_COLS = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Desc', 'Timestamp', 'Contaminated',]
 EXTENDED_COLS = ['Cond','PH', 'ORP', 'TDS', 'Turb', 'Cond_norm', 'PH_norm', 'ORP_norm', 'TDS_norm', 'Turb_norm', 'Desc', 'Timestamp', 'Contaminated']
 
+def is_outlier(sample):
+    if(sample["ORP"] <= 0) : return True
+
+
 def formatModel(models = [
-                            MODEL_DIR + "ChemDptSamples/30pb_absolute.json",
+                            MODEL_DIR + "Models/30pb_absolute.json",
                             MODEL_DIR + "ChemDptSamples/300pb_absolute.json",
                             MODEL_DIR + "ChemDptSamples/3000pb_absolute.json",
                             MODEL_DIR + "ChemDptSamples/10pb_absolute.json",
@@ -33,10 +37,13 @@ def formatModel(models = [
             model = f.read().replace('\n', '')
             model = json.loads(model)
         experiments =  model["Exps"]
+        len_of_exps = 0
         
         for exp in experiments:
             
             print(model_name + " Experiment sample size: " + str(len(exp["results"])))
+            len_of_exps += len(exp["results"])
+            
             insert = []
             desc = exp["desc"]
             center_points[desc] = exp["center_point"]
@@ -44,6 +51,7 @@ def formatModel(models = [
             contaminated = exp["contaminated"]
             total_num_contaminated += contaminated
             for result in exp["results"]:
+                if(is_outlier(result)): continue
                 insert = []
                 insert.append(result["Conductivity"])
                 insert.append(result["PH"])
@@ -55,6 +63,9 @@ def formatModel(models = [
                 insert.append(contaminated)
                 model_df.loc[ix] = (insert)
                 ix += 1
+            print("TOTAL EXP SIZE: " + len(model_df))
+                
+                
     
     print("================================================")
     print("Precentange of contaminated models:")
@@ -65,6 +76,9 @@ def formatModel(models = [
     
     
     return model_df
+
+
+
 
 def formatModel_extra_dims():
     #take our json object and convert to tabular format
