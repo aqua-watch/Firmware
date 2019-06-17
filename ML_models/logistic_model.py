@@ -25,7 +25,8 @@ def build_model(model_df):
     X = []
     y = []
     for idx, row in model_df.iterrows():
-        X.append([row["Cond"], row["PH"],row["ORP"],row["TDS"], row["Turb"]])
+        #X.append([row["Cond"], row["PH"],row["ORP"],row["TDS"], row["Turb"]])
+        X.append([row["Cond"], row["PH"],row["ORP"]])
         y.append(row["Contaminated"])
         
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42, stratify= y)
@@ -37,32 +38,9 @@ def build_model(model_df):
     print("Accuracy on training dataset: ({0:.6f}) ".format( clf.score(X_train , y_train)))
     print("Accuracy on testing dataset: ({0:.6f}) ".format( clf.score(X_test , y_test)))
     
-    """
-    testingModel = createTestingSet()
+    return clf
     
-    total = len(testingModel)
-    correct = 0
-    incorrect = 0
-    
-    for exp in testingModel:
-        #print([list(exp["value"].values())[0:5]])
-        res = clf.predict([list(exp["value"].values())[0:5]]) #0-5 only because we did not train on temp
-        if(res == 1 and exp["contaminated"] == 1 or res == 0 and exp["contaminated"] == 0):
-            correct += 1
-        else:
-            incorrect += 1
-            
-    
-            
-    print("Accuracy on mixed testing set: ({0:.6f}) ".format(correct / total))
-    
-    """
-    
-    #result = clf.predict(x)
-    #print(len(result))
-    #print(result)
-    
-    
+
 contaminated_model_df = formatModels.formatModel(["../Models/phase_1/model_absolute.json"])
 uncontaminated_model_df = formatModels.formatModel(["../Models/ChemDptSamples/unContWater_absolute.json",
                                                     "../Models/ChemDptSamples/deion_absolute.json",
@@ -75,11 +53,30 @@ contaminted_ppb_samples = formatModels.formatModel(["../Models/ChemDptSamples/0.
                                                     "../Models/ChemDptSamples/300pb_absolute.json",
                                                     "../Models/ChemDptSamples/20pb_absolute.json",
                                                     "../Models/ChemDptSamples/10pb_absolute.json"])
-#build_model(
 
 print("===============================================")    
     
-#print(contaminated_model_df.append(uncontaminated_model_df))
 
-build_model(contaminated_model_df.append(uncontaminated_model_df).append(contaminted_ppb_samples))
+clf = build_model(contaminated_model_df.append(uncontaminated_model_df).append(contaminted_ppb_samples))
 print("===============================================")    
+
+print("Testing againts FeNi samples: ")
+
+fe_ni_samples = formatModels.formatModel(["../Models/iron_samples/3000pb_absolute.json",
+                                                    "../Models/iron_samples/300pb_absolute.json",
+                                                    "../Models/iron_samples/80ppm_absolute.json",
+                                                    "../Models/iron_samples/30pb_absolute.json",
+                                                    "../Models/iron_samples/stock_solution_absolute.json"])
+    
+fe_ni_samples.drop(['Desc', 'Timestamp', 'Contaminated', 'TDS', 'Turb'], inplace=True, axis=1)
+total_predictions = 0
+temp = clf.predict(fe_ni_samples)
+pos = 0
+
+for i in temp:
+    pos += i
+    
+print("Total positives: %d"%pos)
+print("Total negatives %d"% (int(len(temp))-pos))
+    
+    
