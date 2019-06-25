@@ -63,7 +63,7 @@ def formatModel(models = [
                 insert.append(contaminated)
                 model_df.loc[ix] = (insert)
                 ix += 1
-            print("TOTAL EXP SIZE: " + len(model_df))
+            print("TOTAL EXP SIZE: " + str(len(model_df)))
                 
                 
     

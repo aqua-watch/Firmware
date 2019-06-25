@@ -165,13 +165,14 @@ def openLatestOutput():
         
 def readFromSerialPort():
     ser = serial.Serial(
-            port='\\.\COM4',\
+            port='/dev/ttyACM2',\
             baudrate=115200
     )
 
     print("connected to: " + ser.portstr)
-    data = str(ser.readline(), 'utf-8').replace('\r\n','')
-    print(data)    
+    data = str(ser.readline(), 'utf-8').replace('\r\n','').split("start")[1]
+    print(data)
+    
     ser.close()
     return json.loads(data) 
     
@@ -221,16 +222,18 @@ def main():
     print("Your actions are 0 for loading latest data set from output file and adding to model \n or 1 for querying a data point from the output file")
     action = int(input())
     if(action == 0):
-        MODEL_NAME = "Models/ChemDptSamples/deion_absolute.json"
-        MODEL_NAME_NORM = "Models/ChemDptSamples/deion_norm.json"
-        DESC = "30pb lead from chem dpt samples"
-        CONTAMINATED = 0
+        """Config """
+        MODEL_NAME = "Models/iron_samples/stock_solution_absolute.json"
+        MODEL_NAME_NORM = "Models/iron_samples/stock_solution_norm.json"
+        DESC = "FeNi stock solution"
+        CONTAMINATED = 1
         AMOUNT_OF_CONT = 0
-        #init Model 
+        #init Models
         create_init_model(MODEL_NAME)
-        
+        create_init_model(MODEL_NAME_NORM)
         
         #data = openLatestOutput()
+        print("Reading from serial port ... ")
         data = readFromSerialPort()
         print(data)
         absolute = data[list(data.keys())[0]]
@@ -253,7 +256,7 @@ def main():
         normalized_data = normalizeMinMax(data[list(data.keys())[0]])
         
         #init Model 
-        create_init_model(MODEL_NAME_NORM)
+        
         center_point = centerPoint(normalized_data)
         closest_point = closestPoint(normalized_data)
         standards = standard_dev_cluster(normalized_data, center_point)
@@ -325,4 +328,3 @@ def insert_model(modelName, desc, isContaminated, ppb_contamination_amount, data
         addToModel(final_obj, "../Models/" + modelName + "_norm.json")
         
         pprint("Done!")
-
