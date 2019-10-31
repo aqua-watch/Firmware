@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sun Sep 23 10:28:29 2018
-
 @author: Armin
 """
 import json
@@ -165,12 +164,12 @@ def openLatestOutput():
         
 def readFromSerialPort():
     ser = serial.Serial(
-            port='/dev/ttyACM2',\
+            port='/dev/ttyACM0',\
             baudrate=115200
     )
 
     print("connected to: " + ser.portstr)
-    data = str(ser.readline(), 'utf-8').replace('\r\n','').split("start")[1]
+    data = str(ser.readline()).replace('\r\n','').split("start")[1]
     print(data)
     
     ser.close()
@@ -192,7 +191,7 @@ def normalizeMinMax(dataset):
     @param: Array of objects 
     
     """
-    cp_data  = dataset.copy()
+    cp_data  = list(dataset)
     inverted = {}
     
     #for each metric compute its min and max
@@ -223,8 +222,8 @@ def main():
     action = int(input())
     if(action == 0):
         """Config """
-        MODEL_NAME = "Models/iron_samples/stock_solution_absolute.json"
-        MODEL_NAME_NORM = "Models/iron_samples/stock_solution_norm.json"
+        MODEL_NAME = "Models/distrill_new_abs.json"
+        MODEL_NAME_NORM = "Models/distrill_new_norm.json"
         DESC = "FeNi stock solution"
         CONTAMINATED = 1
         AMOUNT_OF_CONT = 0
@@ -328,3 +327,5 @@ def insert_model(modelName, desc, isContaminated, ppb_contamination_amount, data
         addToModel(final_obj, "../Models/" + modelName + "_norm.json")
         
         pprint("Done!")
+if __name__ == '__main__':
+	main()
